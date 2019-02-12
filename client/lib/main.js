@@ -16,33 +16,33 @@ function signOut() {
 }
 
 function login(data) {
-    $.ajax({
+    axios({
         url: `${baseUrl}/api/users/login`,
         method: 'POST',
         data,
     })
-        .done(response => {
-            localStorage.setItem('token', response.token)
+        .then(response => {
+            localStorage.setItem('token', response.data.token)
             token = localStorage.getItem('token')
             loginVerify()
         })
-        .fail(response => {
+        .catch(response => {
             onLoginChecked(false, response)
         })
 }
 
 function register(data) {
-    $.ajax({
+    axios({
         url: `${baseUrl}/api/users/register`,
         method: 'POST',
         data,
     })
-        .done(response => {
-            localStorage.setItem('token', response.token)
+        .then(response => {
+            localStorage.setItem('token', response.data.token)
             token = localStorage.getItem('token')
             loginVerify()
         })
-        .fail(response => {
+        .catch(response => {
             onLoginChecked(false, response)
         })
 }
@@ -57,33 +57,33 @@ function onSignIn(googleUser) {
     console.log('Image URL: ' + profile.getImageUrl());
     console.log('Email: ' + profile.getEmail());
     console.log('Token: ' + googleUser.getAuthResponse().id_token)*/
-    $.ajax({
+    axios({
         url: `${baseUrl}/api/googleloginverify`,
         headers: {
             'googletoken': googleUser.getAuthResponse().id_token
         }
     })
-        .done(response => {
+        .then(response => {
             if (!localStorage.getItem('token')) {
-                localStorage.setItem('token', response.token)
+                localStorage.setItem('token', response.data.token)
                 token = localStorage.getItem('token')
                 loginVerify()
             }
         })
-        .fail(response => {
+        .catch(response => {
             onLoginChecked(false, response)
         })
 }
 
 function loginVerify() {
-    $.ajax({
+    axios({
         url: `${baseUrl}/api/users/loginverify`,
         headers: { token }
     })
-        .done(response => {
-            onLoginChecked(true, response)
+        .then(response => {
+            onLoginChecked(true, response.data)
         })
-        .fail(response => {
+        .catch(response => {
             onLoginChecked(false, response)
         })
 }
