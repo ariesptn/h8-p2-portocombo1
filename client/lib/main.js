@@ -57,22 +57,23 @@ function onSignIn(googleUser) {
     console.log('Image URL: ' + profile.getImageUrl());
     console.log('Email: ' + profile.getEmail());
     console.log('Token: ' + googleUser.getAuthResponse().id_token)*/
-    axios({
-        url: `${baseUrl}/api/googleloginverify`,
-        headers: {
-            'googletoken': googleUser.getAuthResponse().id_token
-        }
-    })
-        .then(response => {
-            if (!localStorage.getItem('token')) {
+    if (!localStorage.getItem('token')) {
+        axios({
+            url: `${baseUrl}/api/googleloginverify`,
+            headers: {
+                'googletoken': googleUser.getAuthResponse().id_token
+            }
+        })
+            .then(response => {
                 localStorage.setItem('token', response.data.token)
                 token = localStorage.getItem('token')
                 loginVerify()
-            }
-        })
-        .catch(response => {
-            onLoginChecked(false, response)
-        })
+
+            })
+            .catch(response => {
+                onLoginChecked(false, response)
+            })
+    }
 }
 
 function loginVerify() {

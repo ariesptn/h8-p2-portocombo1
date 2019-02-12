@@ -26,111 +26,120 @@
 </head>
 
 <body>
-    <div class="container" id="app">
-        <div class="jumbotron">
+    <div id="app">
+        <div v-if="showError" class="alert alert-warning" role="alert">{{errorMessage}}</div>
+
+        <div class="container" v-if="loggedIn">
+            <!-- <div class="jumbotron">
             <h1 class="display-4">My Sites</h1>
             <p class="lead">This is my amazing site.</p>
-            <!-- <hr class="my-4">
+            <hr class="my-4">
             <p>It just works.</p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">Yay</a> -->
-        </div>
-        <div class="alert alert-warning" role="alert">{{errorMessage}}</div>
+            <a class="btn btn-primary btn-lg" href="#" role="button">Yay</a>
+        </div> -->
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-            <a class="navbar-brand text-light" href="#">Mini-wp</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+                <a class="navbar-brand text-light" href="#">Mini-wp</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link text-light" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="#">Reader</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a v-on:click="showEmptyForm" class="nav-link text-light" href="#">New article <span
+                                    class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a v-on:click="getArticles" class="nav-link text-light" href="#">Refresh</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Menu
+                            </a>
+                            <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                                <a v-on:click="switchPanel('articles')" class="dropdown-item text-light"
+                                    href="#">Articles</a>
+                                <a v-on:click="switchPanel('tags')" class="dropdown-item text-light" href="#">Tags</a>
+                                <div class="dropdown-divider"></div>
+                                <a v-on:click="logout" class="dropdown-item text-light" href="#">Logout</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled text-light" href="#" tabindex="-1"
+                                aria-disabled="true">{{userName}} ({{userEmail}})</a>
+                        </li>
+                    </ul>
+                    <form v-on:submit.prevent="searchArticles" class="form-inline my-2 my-lg-0">
+                        <input v-model="searchBox" class="form-control mr-sm-2" type="search" placeholder="Search"
+                            aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+            </nav>
+
+            <div class="row">
+                <div class="col-3">
+                    <div id="list-example" class="list-group">
+                        <a class="list-group-item list-group-item-action" href="#">View site</a>
+                        <a v-on:click="showEmptyForm" class="list-group-item list-group-item-action" href="#">New
+                            Article</a>
+                        <a v-on:click="getArticles" class="list-group-item list-group-item-action" href="#">Refresh</a>
+                    </div>
+                    <hr class="my-4">
+                    <ul class="list-group">
+                        <a href="#" v-on:click="switchPanel('articles')"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                             Articles
+                            <span class="badge badge-primary badge-pill">{{articles.length}}</span>
                         </a>
-                        <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item text-light" href="#">Create</a>
-                            <a class="dropdown-item text-light" href="#">Edit</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-light" href="#">Settings</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled text-light" href="#" tabindex="-1" aria-disabled="true">User</a>
-                    </li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </div>
-        </nav>
-
-        <div class="row">
-            <div class="col-3">
-                <div id="list-example" class="list-group">
-                    <a class="list-group-item list-group-item-action" href="#">View site</a>
-                    <a v-on:click="showEmptyForm" class="list-group-item list-group-item-action" href="#">New
-                        Article</a>
-                </div>
-                <hr class="my-4">
-                <ul class="list-group">
-                    <a href="#" v-on:click="getArticles"
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        Articles
-                        <span class="badge badge-primary badge-pill">{{articles.length}}</span>
-                    </a>
-                    <a href="#"
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        Tags
-                        <span class="badge badge-primary badge-pill">
-                            {{new Set(articles.map(e=>e.tags).reduce((a,b)=>a.concat(b),[])).size}}
-                        </span>
-                    </a>
-                    <a href="#"
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        Images
-                        <span class="badge badge-primary badge-pill">0</span>
-                    </a>
-            </div>
-
-            <div class="col-9">
-                <div v-for="tag in articleTags" class="list-group" v-if="showTags">
-                    <a href="#" v-on:click=""
-                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        {{tag}}
-                        <span class="badge badge-primary badge-pill">
-                            {{articles.filter(e=>e.tags.includes(tag)).length}}
-                        </span>
-                    </a>
+                        <a href="#" v-on:click="switchPanel('tags')"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            Tags
+                            <span class="badge badge-primary badge-pill">
+                                {{totalTagsOfArticles}}
+                            </span>
+                        </a>
+                        <a href="#"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            Images
+                            <span class="badge badge-primary badge-pill">0</span>
+                        </a>
                 </div>
 
-                <div v-for="article in articles" class="card" v-if="showArticles">
-                    <div class="card-header">
-                        {{article.tags.join(',')}}
+                <div class="col-9">
+                    <div v-for="tag in articleTags" class="list-group" v-if="showTags">
+                        <a href="#" v-on:click="tagSelect(tag)"
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            {{tag}}
+                            <span class="badge badge-primary badge-pill">
+                                {{articles.filter(e => e.tags.includes(tag)).length}}
+                            </span>
+                        </a>
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{article.title}}</h5>
-                        <p class="card-text">{{article.content}}</p>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-secondary"
-                                v-on:click="showEditForm(article)">Edit</button>
-                            <button type="button" class="btn btn-secondary"
-                                v-on:click="articleDelete(article)">Delete</button>
+
+                    <div v-for="article in articles" class="card" v-if="showArticles">
+                        <div class="card-header">
+                            {{article.createdAt.split('T').join(' ').split('.')[0]}}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{article.title}}</h5>
+                            <p class="card-text">{{article.content | striphtml}}</p>
+                            <p class="card-text"><strong>Tags : </strong> {{article.tags.join(',')}}</p>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-secondary"
+                                    v-on:click="showEditForm(article)">Edit</button>
+                                <button type="button" class="btn btn-secondary"
+                                    v-on:click="articleDelete(article)">Delete</button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div v-if="showArticleForm">
-                    <!-- <div class="input-group mb-3">
+                    <div v-if="showArticleForm">
+                        <!-- <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Title</span>
                     </div>
@@ -146,61 +155,94 @@
                     </div>
                 </div> -->
 
-                    <label for="basic-url">Your article</label>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon3">Title</span>
+                        <label for="basic-url">Your article</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon3">Title</span>
+                            </div>
+                            <input type="text" v-model="articleFormTitle" class="form-control" id="basic-url"
+                                placeholder="Title" aria-describedby="basic-addon3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">:)</span>
+                            </div>
                         </div>
-                        <input type="text" v-model="articleFormTitle" class="form-control" id="basic-url"
-                            aria-describedby="basic-addon3">
-                        <div class="input-group-append">
-                            <span class="input-group-text">:)</span>
-                        </div>
-                    </div>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Tags</span>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Tags</span>
+                            </div>
+                            <input type="text" v-model="articleFormTags" class="form-control"
+                                placeholder="tag1,tag2,tag3" aria-label="Amount">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Comma separated tags</span>
+                            </div>
                         </div>
-                        <input type="text" v-model="articleFormTags" class="form-control"
-                            aria-label="Amount (to the nearest dollar)">
-                        <div class="input-group-append">
-                            <span class="input-group-text">:)</span>
-                        </div>
-                    </div>
 
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">Articles</span>
-                        </div>
-                        <textarea v-model="articleFormContent" class="form-control"
-                            aria-label="With textarea"></textarea>
-                    </div>
+                        <!-- <div id="articleFormQuill">
+                    </div> -->
 
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" v-on:click="articleFormSubmit" class="btn btn-secondary">Save</button>
-                        <button type="button" class="btn btn-secondary">Cancel</button>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Articles</span>
+                            </div>
+                            <textarea v-model="articleFormContent" class="form-control"
+                                aria-label="With textarea"></textarea>
+                        </div>
+
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" v-on:click="articleFormSubmit" class="btn btn-secondary">Save</button>
+                            <button type="button" v-on:click="switchPanel('articles')"
+                                class="btn btn-secondary">Cancel</button>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col bg-dark">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">My sites</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Privacy policy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Terms and conditions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">(c) Mini-wp</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col bg-dark">
-                <ul class="nav nav-pills">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">My sites</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Privacy policy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Terms and conditions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">(c) Mini-wp</a>
-                    </li>
-                </ul>
+        <div class="container" id="loginRegister" v-if="loggedIn===false">
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+            <div v-on:submit.prevent="login" id="loginFrame">
+                <form class="form-group card" id="loginForm">
+                    <h2>Login</h2>
+                    <label for="loginEmail" class="control-label">Email</label>
+                    <input type="email" class="form-control" v-model="loginEmail">
+                    <label for="loginPassword" class="control-label">Password</label>
+                    <input type="password" class="form-control" v-model="loginPassword">
+                    <button id="loginSubmit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+
+            <div id="registerFrame">
+                <div class="form-group card" id="registerForm">
+                    <h2>Register</h2>
+                    <label for="registerName" class="control-label">Name</label>
+                    <input type="text" class="form-control" v-model="registerName">
+                    <label for="registerEmail" class="control-label">Email</label>
+                    <input type="email" class="form-control" v-model="registerEmail">
+                    <label for="registerPassword" class="control-label">Password</label>
+                    <input type="password" class="form-control" v-model="registerPassword">
+                    <button v-on:click="register" id="registerSubmit" class="btn btn-primary">Register</button>
+                </div>
             </div>
         </div>
     </div>

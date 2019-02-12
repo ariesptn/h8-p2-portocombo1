@@ -1,7 +1,22 @@
 function onLoginChecked(isSuccess, response) {
-
+    if (isSuccess) {
+        app.loggedIn = true
+        app.userName = response.name
+        app.userEmail = response.email
+        app.getArticles()
+    } else {
+        app.loggedIn = false
+        app.userName = ''
+        app.userEmail = ''
+    }
 }
 
+Vue.filter('striphtml', function (value) {
+    var div = document.createElement("div")
+    div.innerHTML = value
+    var text = div.textContent || div.innerText || ""
+    return text
+})
 
 let app = new Vue({
     el: '#app',
@@ -9,43 +24,85 @@ let app = new Vue({
         this.getArticles()
     },
     data: {
-        message: 'Hello Vue',
+        userName: '',
+        userEmail: '',
+        loginEmail: '',
+        loginPassword: '',
+        registerName: '',
+        registerEmail: '',
+        registerPassword: '',
+        loggedIn: false,
         articleFormTitle: '',
         articleFormTags: '',
         articleFormContent: '',
+        articleEditId: '',
         errorMessage: '',
+        allArticles: [],
         articles: [],
         articleTags: [],
-        articleEditId: '',
+        searchBox: '',
+        showError: false,
         showArticles: true,
-        showTags: true,
-        showArticleForm: true,
+        showTags: false,
+        showArticleForm: false,
+    },
+    watch: {
+    },
+    computed: {
+        totalTagsOfArticles: function () {
+            return new Set(
+                this.articles.map(e => e.tags).reduce((a, b) => a.concat(b), [])).size
+        },
     },
     methods: {
+        switchPanel: function (panel) {
+            this.showArticles = panel === 'articles'
+            this.showTags = panel === 'tags'
+            this.showArticleForm = panel === 'articleForm'
+        },
         showEmptyForm: function () {
+            this.switchPanel('articleForm')
             this.articleFormTitle = ''
             this.articleFormTags = ''
-            this.articleFormContent = ''
             this.articleEditId = ''
+            this.articleFormContent = ''
+            //articleFormQuill = new Quill('#articleFormQuill', { theme: 'snow' })
+            //articleFormQuill.setText('')
         },
         showEditForm: function (article) {
+            this.switchPanel('articleForm')
             this.articleFormTitle = article.title
             this.articleFormTags = article.tags.join(',')
-            this.articleFormContent = article.content
             this.articleEditId = article._id
+            this.articleFormContent = article.content
+            //articleFormQuill = new Quill('#articleFormQuill', { theme: 'snow' })
+            //articleFormQuill.root.innerHTML = article.content
+        },
+        searchArticles: function () {
+            this.switchPanel('articles')
+            this.articles = this.allArticles.filter(e => {
+                return e.title.includes(this.searchBox) || e.content.includes(this.searchBox) || e.tags.includes(this.searchBox)
+            })
+            this.articles.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            this.articleTags = Array.from(
+                new Set(
+                    this.articles
+                        .map(e => e.tags)
+                        .reduce((a, b) => a.concat(b), [])))
+            this.articleTags.sort((a, b) => a - b)
+        },
+        tagSelect: function (tag) {
+            this.searchBox = tag
+            this.searchArticles()
         },
         getArticles: async function () {
             let response = await axios({
                 baseURL: baseUrl,
                 url: `/api/articles`,
                 headers: { token },
-            }).catch(this.showError)
-            this.articles = response.data
-            this.articleTags = Array.from(
-                new Set(
-                    this.articles
-                        .map(e => e.tags)
-                        .reduce((a, b) => a.concat(b), [])))
+            }).catch(this.displayError)
+            this.allArticles = response.data
+            this.searchArticles()
         },
         articleFormSubmit: async function () {
             let method = 'POST'
@@ -61,8 +118,9 @@ let app = new Vue({
                     title: this.articleFormTitle,
                     tags: this.articleFormTags,
                     content: this.articleFormContent,
+                    //content: articleFormQuill.root.innerHTML,
                 }
-            }).catch(this.showError)
+            }).catch(this.displayError)
             this.getArticles()
         },
         articleDelete: async function (article) {
@@ -71,12 +129,36 @@ let app = new Vue({
                 url: `/api/articles/${article._id}`,
                 method: 'DELETE',
                 headers: { token },
-            }).catch(this.showError)
+            }).catch(this.displayError)
             this.getArticles()
         },
-        showError: function (error) {
+        login: function () {
+            login({
+                email: this.loginEmail,
+                password: this.loginPassword,
+            })
+        },
+        register: function () {
+            register({
+                name: this.registerName,
+                email: this.registerEmail,
+                password: this.registerPassword,
+            })
+        },
+        logout() {
+            signOut()
+        },
+        displayError: function (error) {
             this.errorMessage = error
-        }
+            this.showError = true
+            setTimeout(() => {
+                this.showError = false
+            }, 10000)
+        },
     }
 })
+
+// let articleFormQuill = new Quill('#articleFormQuill', {
+//     theme: 'snow'
+// })
 
