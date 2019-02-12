@@ -28,6 +28,7 @@
         <div class="bg-info">
             <h1>Todo App</h1>
         </div>
+        <div class="row alert alert-warning" id="errorMessage"></div>
 
         <div class="container" id="contents">
             <div class="row bg-dark text-light">
@@ -42,9 +43,7 @@
                     <button onclick="signOut()" class="btn btn-secondary">Sign Out</button>
                 </div>
             </div>
-
-            <div class="row alert alert-warning" id="errorMessage"></div>
-
+            
             <div class="row">
                 <div id="todoFrame" class="col">
                     <button class="btn btn-primary" id="createPersonalTodo">Create your todo</button>
@@ -127,6 +126,7 @@
 
         </div>
     </div>
+    <script src="/lib/main.js"></script>
     <script src="main.js"></script>
     <script src="todo.js"></script>
     <script src="project.js"></script>
