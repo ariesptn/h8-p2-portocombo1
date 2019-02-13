@@ -42,7 +42,7 @@ let app = new Vue({
         articleTags: [],
         searchBox: '',
         showError: false,
-        showArticles: true,
+        showArticles: false,
         showTags: false,
         showArticleForm: false,
     },
@@ -66,8 +66,6 @@ let app = new Vue({
             this.articleFormTags = ''
             this.articleEditId = ''
             this.articleFormContent = ''
-            //articleFormQuill = new Quill('#articleFormQuill', { theme: 'snow' })
-            //articleFormQuill.setText('')
         },
         showEditForm: function (article) {
             this.switchPanel('articleForm')
@@ -75,8 +73,6 @@ let app = new Vue({
             this.articleFormTags = article.tags.join(',')
             this.articleEditId = article._id
             this.articleFormContent = article.content
-            //articleFormQuill = new Quill('#articleFormQuill', { theme: 'snow' })
-            //articleFormQuill.root.innerHTML = article.content
         },
         searchArticles: function () {
             this.switchPanel('articles')
@@ -118,7 +114,6 @@ let app = new Vue({
                     title: this.articleFormTitle,
                     tags: this.articleFormTags,
                     content: this.articleFormContent,
-                    //content: articleFormQuill.root.innerHTML,
                 }
             }).catch(this.displayError)
             this.getArticles()
@@ -151,16 +146,12 @@ let app = new Vue({
         displayError: function (error) {
             if (!JSON.stringify(error).includes('jwt malformed')) {
                 this.errorMessage = error
+                this.showError = true
             }
-            this.showError = true
             setTimeout(() => {
+                this.errorMessage = ''
                 this.showError = false
             }, 10000)
         },
     }
 })
-
-// let articleFormQuill = new Quill('#articleFormQuill', {
-//     theme: 'snow'
-// })
-
