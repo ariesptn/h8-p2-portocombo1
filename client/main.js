@@ -149,7 +149,9 @@ let app = new Vue({
             signOut()
         },
         displayError: function (error) {
-            this.errorMessage = error
+            if (!JSON.stringify(error).includes('jwt malformed')) {
+                this.errorMessage = error
+            }
             this.showError = true
             setTimeout(() => {
                 this.showError = false
