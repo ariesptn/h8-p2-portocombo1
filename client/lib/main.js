@@ -77,16 +77,20 @@ function onSignIn(googleUser) {
 }
 
 function loginVerify() {
-    axios({
-        url: `${baseUrl}/api/users/loginverify`,
-        headers: { token }
-    })
-        .then(response => {
-            onLoginChecked(true, response.data)
+    if (localStorage.getItem('token')) {
+        axios({
+            url: `${baseUrl}/api/users/loginverify`,
+            headers: { token: localStorage.getItem('token') }
         })
-        .catch(response => {
-            onLoginChecked(false, response)
-        })
+            .then(response => {
+                onLoginChecked(true, response.data)
+            })
+            .catch(response => {
+                onLoginChecked(false, response)
+            })
+    } else {
+        onLoginChecked(false, { message: 'Not signed in' })
+    }
 }
 
 loginVerify()
