@@ -5,7 +5,7 @@ const routes = require('./routes')
 const mongoose = require('mongoose')
 require('dotenv').config()
 
-mongoose.connect('mongodb://localhost/fancy-todo')
+mongoose.connect(process.env.MONGODB_SRV || 'mongodb://localhost/h8-p2-portocombo1')
 app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())

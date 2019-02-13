@@ -27,7 +27,9 @@
 
 <body>
     <div id="app">
-        <div v-if="showError" class="alert alert-warning" role="alert">{{errorMessage}}</div>
+        <div class="container">
+            <div v-if="showError" class="alert alert-warning" role="alert">{{errorMessage}}</div>
+        </div>
 
         <div class="container" v-if="loggedIn">
             <!-- <div class="jumbotron">

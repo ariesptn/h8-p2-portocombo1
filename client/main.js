@@ -1,16 +1,3 @@
-function onLoginChecked(isSuccess, response) {
-    if (isSuccess) {
-        app.loggedIn = true
-        app.userName = response.name
-        app.userEmail = response.email
-        app.getArticles()
-    } else {
-        app.loggedIn = false
-        app.userName = ''
-        app.userEmail = ''
-    }
-}
-
 Vue.filter('striphtml', function (value) {
     var div = document.createElement("div")
     div.innerHTML = value
@@ -24,7 +11,8 @@ let app = new Vue({
         wysiwyg: vueWysiwyg.default.component,
     },
     created: function () {
-        this.getArticles()
+    },
+    mounted: function () {
     },
     data: {
         userName: '',
@@ -99,7 +87,7 @@ let app = new Vue({
                 baseURL: baseUrl,
                 url: `/api/articles`,
                 headers: { token },
-            }).catch(err => this.displayError(err.data))
+            }).catch(err => this.displayError(err))
             this.allArticles = response.data
             this.searchArticles()
         },
@@ -118,7 +106,7 @@ let app = new Vue({
                     tags: this.articleFormTags,
                     content: this.articleFormContent,
                 }
-            }).catch(err => this.displayError(err.data))
+            }).catch(err => this.displayError(err))
             let formData = new FormData();
             let articleFormFile = document.querySelector('#articleFormFile');
             formData.append('articleFile', articleFormFile.files[0]);
@@ -131,7 +119,7 @@ let app = new Vue({
                     'Content-Type': 'multipart/form-data',
                 },
                 data: formData,
-            }).catch(err => this.displayError(err.data))
+            }).catch(err => this.displayError(err))
             this.getArticles()
         },
         articleDelete: async function (article) {
@@ -140,7 +128,7 @@ let app = new Vue({
                 url: `/api/articles/${article._id}`,
                 method: 'DELETE',
                 headers: { token },
-            }).catch(err => this.displayError(err.data))
+            }).catch(err => this.displayError(err))
             this.getArticles()
         },
         login: function () {
@@ -159,11 +147,22 @@ let app = new Vue({
         logout() {
             signOut()
         },
-        displayError: function (error) {
-            if (!JSON.stringify(error).includes('jwt malformed')) {
-                this.errorMessage = error
-                this.showError = true
+        loginCheck: function (isSuccess, response) {
+            if (isSuccess) {
+                this.loggedIn = true
+                this.userName = response.name
+                this.userEmail = response.email
+                this.getArticles()
+            } else {
+                this.loggedIn = false
+                this.userName = ''
+                this.userEmail = ''
+                this.displayError(response)
             }
+        },
+        displayError: function (error) {
+            this.errorMessage = error
+            this.showError = true
             setTimeout(() => {
                 this.errorMessage = ''
                 this.showError = false
@@ -171,3 +170,7 @@ let app = new Vue({
         },
     }
 })
+
+function onLoginChecked(isSuccess, response) {
+    app.loginCheck(isSuccess, response)
+}
