@@ -20,6 +20,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/lib/vue-wysiwyg/vueWysiwyg.css">
+    <script src="/lib/vue-wysiwyg/vueWysiwyg.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -176,12 +178,16 @@
                             </div>
                         </div>
 
-                        <div class="input-group mb-3">
+                        <!-- <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">Articles</span>
                             </div>
                             <textarea v-model="articleFormContent" class="form-control"
                                 aria-label="With textarea"></textarea>
+                        </div> -->
+
+                        <div>
+                            <wysiwyg v-model="articleFormContent" />
                         </div>
 
                         <div class="btn-group" role="group" aria-label="Basic example">
@@ -243,7 +249,10 @@
                 </div>
             </div>
         </div>
-        <div id="googleSigninButton2" class="g-signin2" data-onsuccess="onSignIn"></div>
+
+        <div class="container">
+            <div id="googleSigninButton2" class="g-signin2" data-onsuccess="onSignIn"></div>
+        </div>
     </div>
 
     <script src="/lib/main.js"></script>

@@ -20,6 +20,9 @@ Vue.filter('striphtml', function (value) {
 
 let app = new Vue({
     el: '#app',
+    components: {
+        wysiwyg: vueWysiwyg.default.component,
+    },
     created: function () {
         this.getArticles()
     },
