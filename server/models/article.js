@@ -4,6 +4,7 @@ const articleSchema = mongoose.Schema({
     title: String,
     content: String,
     tags: [String],
+    fileUrl: String,
     createdAt: Date,
     updatedAt: Date,
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' }

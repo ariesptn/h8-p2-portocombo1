@@ -70,9 +70,26 @@ class ArticleController {
     }
 
     static async fileUpload(req, res) {
-        console.log(req.file)
-        res.status(200).json(req.file)
+        try {
+            let articleData
+            let imgUrl = req.file.cloudStoragePublicUrl
+            if (imgUrl) {
+                articleData = await models.Article.findById(req.params.articleId)
+                if (articleData) {
+                    throw { message: 'article not found' }
+                } else {
+                    articleData.file = imgUrl
+                    articleData.save()
+                }
+            }
+            res.status(200).send(articleData)
+        }
+        catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
     }
+
 }
 
 module.exports = ArticleController
