@@ -190,6 +190,11 @@
                             <wysiwyg v-model="articleFormContent" />
                         </div>
 
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="articleFormFile">
+                            <label class="custom-file-label" for="articleFormFile">Choose file</label>
+                        </div>
+
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button type="button" v-on:click="articleFormSubmit" class="btn btn-secondary">Save</button>
                             <button type="button" v-on:click="switchPanel('articles')"

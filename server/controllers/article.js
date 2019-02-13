@@ -68,6 +68,11 @@ class ArticleController {
             res.status(500).json(err)
         }
     }
+
+    static async fileUpload(req, res) {
+        console.log(req.file)
+        res.status(200).json(req.file)
+    }
 }
 
 module.exports = ArticleController

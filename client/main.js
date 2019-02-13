@@ -99,7 +99,7 @@ let app = new Vue({
                 baseURL: baseUrl,
                 url: `/api/articles`,
                 headers: { token },
-            }).catch(this.displayError)
+            }).catch(err => this.displayError(err.data))
             this.allArticles = response.data
             this.searchArticles()
         },
@@ -118,7 +118,20 @@ let app = new Vue({
                     tags: this.articleFormTags,
                     content: this.articleFormContent,
                 }
-            }).catch(this.displayError)
+            }).catch(err => this.displayError(err.data))
+            let formData = new FormData();
+            let articleFormFile = document.querySelector('#articleFormFile');
+            formData.append('articleFile', articleFormFile.files[0]);
+            let fileResponse = await axios({
+                baseURL: baseUrl,
+                url: `/api/articles/file/${response.data._id}`,
+                method: 'POST',
+                headers: {
+                    token,
+                    'Content-Type': 'multipart/form-data',
+                },
+                data: formData,
+            }).catch(err => this.displayError(err.data))
             this.getArticles()
         },
         articleDelete: async function (article) {
@@ -127,7 +140,7 @@ let app = new Vue({
                 url: `/api/articles/${article._id}`,
                 method: 'DELETE',
                 headers: { token },
-            }).catch(this.displayError)
+            }).catch(err => this.displayError(err.data))
             this.getArticles()
         },
         login: function () {

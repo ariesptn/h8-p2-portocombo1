@@ -27,7 +27,7 @@ function login(data) {
             loginVerify()
         })
         .catch(response => {
-            onLoginChecked(false, response)
+            onLoginChecked(false, response.data)
         })
 }
 
@@ -43,7 +43,7 @@ function register(data) {
             loginVerify()
         })
         .catch(response => {
-            onLoginChecked(false, response)
+            onLoginChecked(false, response.data)
         })
 }
 
@@ -71,7 +71,7 @@ function onSignIn(googleUser) {
 
             })
             .catch(response => {
-                onLoginChecked(false, response)
+                onLoginChecked(false, response.data)
             })
     }
 }
@@ -85,7 +85,7 @@ function loginVerify() {
             onLoginChecked(true, response.data)
         })
         .catch(response => {
-            onLoginChecked(false, response)
+            onLoginChecked(false, response.data)
         })
 }
 
