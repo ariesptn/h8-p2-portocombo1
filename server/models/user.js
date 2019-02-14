@@ -17,7 +17,11 @@ const userSchema = mongoose.Schema({
                         try {
                             let member = await User.findOne({ email: value })
                             if (member) {
-                                resolve(false)
+                                if (member._id.toString() == this._id.toString()) {
+                                    resolve(true)
+                                } else {
+                                    reject(false)
+                                }
                             } else {
                                 resolve(true)
                             }
@@ -41,8 +45,8 @@ userSchema.pre('save', async function (next) {
 })
 userSchema.post('findOneAndUpdate', async function (value, next) {
     let password = await bcrypt.hash(value.password, 1)
-    value.password = password
-    value.save()
+    // value.password = password
+    // value.save()
     next()
 })
 
