@@ -12,7 +12,7 @@ const storage = new Storage({
 const bucket = storage.bucket(CLOUD_BUCKET)
 
 const getPublicUrl = (filename) => {
-  return `https://storage.googleapis.com/${CLOUD_BUCKET}/${filename}`
+  return `https://storage.googleapis.com/${CLOUD_BUCKET}/h8-p2-portocombo1/${filename}`
 }
 
 const sendUploadToGCS = (req, res, next) => {
