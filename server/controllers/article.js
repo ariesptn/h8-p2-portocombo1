@@ -16,6 +16,11 @@ class ArticleController {
         try {
             let articleData = await models.Article.find()
                 .sort({ createdAt: -1 }).populate('user').limit(100).lean()
+            articleData = articleData.map(e => {
+                e.user.email = ''
+                e.user.password = ''
+                return e
+            })
             res.status(200).json(articleData)
         } catch (err) {
             console.log(err)
