@@ -8,7 +8,6 @@ Vue.filter('striphtml', function (value) {
 let app = new Vue({
     el: '#app',
     components: {
-        wysiwyg: vueWysiwyg.default.component,
     },
     created: function () {
     },
@@ -17,11 +16,6 @@ let app = new Vue({
     data: {
         userName: '',
         userEmail: '',
-        loginEmail: '',
-        loginPassword: '',
-        registerName: '',
-        registerEmail: '',
-        registerPassword: '',
         loggedIn: false,
         articleFormTitle: '',
         articleFormTags: '',
@@ -38,12 +32,11 @@ let app = new Vue({
         showArticleForm: false,
     },
     watch: {
+        searchBox() {
+            this.searchArticles()
+        }
     },
     computed: {
-        totalTagsOfArticles: function () {
-            return new Set(
-                this.articles.map(e => e.tags).reduce((a, b) => a.concat(b), [])).size
-        },
     },
     methods: {
         switchPanel: function (panel) {
@@ -67,9 +60,14 @@ let app = new Vue({
         },
         searchArticles: function () {
             this.switchPanel('articles')
+            let searchQuery = this.searchBox.slice(0, this.searchBox.indexOf('tag:')).trim()
             this.articles = this.allArticles.filter(e => {
-                return e.title.includes(this.searchBox) || e.content.includes(this.searchBox) || e.tags.includes(this.searchBox)
+                return e.title.includes(searchQuery) || e.content.includes(searchQuery) || e.tags.some(f => f.includes(searchQuery))
             })
+            if (this.searchBox.includes('tag:')) {
+                let searchTag = this.searchBox.substring(this.searchBox.indexOf('tag:') + 4)
+                this.articles = this.articles.filter(e => e.tags.includes(searchTag))
+            }
             this.articles.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
             this.articleTags = Array.from(
                 new Set(
@@ -79,48 +77,21 @@ let app = new Vue({
             this.articleTags.sort((a, b) => a - b)
         },
         tagSelect: function (tag) {
-            this.searchBox = tag
+            this.searchBox = 'tag:' + tag
             this.searchArticles()
         },
-        getArticles: async function () {
+        getArticles: async function (scope) {
+            let url = `/api/articles`
+            if (scope == 'all') {
+                url = `/api/articles/all`
+            }
             let response = await axios({
                 baseURL: baseUrl,
-                url: `/api/articles`,
+                url,
                 headers: { token },
             }).catch(err => this.displayError(err))
             this.allArticles = response.data
             this.searchArticles()
-        },
-        articleFormSubmit: async function () {
-            let method = 'POST'
-            if (this.articleEditId !== '') {
-                method = 'PUT'
-            }
-            let response = await axios({
-                baseURL: baseUrl,
-                url: `/api/articles/${this.articleEditId}`,
-                method,
-                headers: { token },
-                data: {
-                    title: this.articleFormTitle,
-                    tags: this.articleFormTags,
-                    content: this.articleFormContent,
-                }
-            }).catch(err => this.displayError(err))
-            let formData = new FormData();
-            let articleFormFile = document.querySelector('#articleFormFile');
-            formData.append('articleFile', articleFormFile.files[0]);
-            let fileResponse = await axios({
-                baseURL: baseUrl,
-                url: `/api/articles/file/${response.data._id}`,
-                method: 'POST',
-                headers: {
-                    token,
-                    'Content-Type': 'multipart/form-data',
-                },
-                data: formData,
-            }).catch(err => this.displayError(err))
-            this.getArticles()
         },
         articleDelete: async function (article) {
             let response = await axios({
@@ -130,19 +101,6 @@ let app = new Vue({
                 headers: { token },
             }).catch(err => this.displayError(err))
             this.getArticles()
-        },
-        login: function () {
-            login({
-                email: this.loginEmail,
-                password: this.loginPassword,
-            })
-        },
-        register: function () {
-            register({
-                name: this.registerName,
-                email: this.registerEmail,
-                password: this.registerPassword,
-            })
         },
         logout() {
             signOut()
@@ -161,7 +119,13 @@ let app = new Vue({
             }
         },
         displayError: function (error) {
-            this.errorMessage = error
+            if (error.response) {
+                this.errorMessage = error.response.data.message
+            } else if (error.message) {
+                this.errorMessage = error.message
+            } else {
+                this.errorMessage = '<pre>' + JSON.stringify(error, null, 2) + '</pre>'
+            }
             this.showError = true
             setTimeout(() => {
                 this.errorMessage = ''

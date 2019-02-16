@@ -89,7 +89,7 @@ function loginVerify() {
                 onLoginChecked(false, response)
             })
     } else {
-        onLoginChecked(false, { message: 'Not signed in' })
+        onLoginChecked(false, { "message": "Not signed in" })
     }
 }
 

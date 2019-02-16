@@ -26,17 +26,10 @@
 <body>
     <div id="app">
         <div class="container">
-            <div v-if="showError" class="alert alert-warning" role="alert">{{errorMessage}}</div>
+            <div v-if="showError" class="alert alert-warning" role="alert" v-html="errorMessage"></div>
         </div>
 
         <div class="container" v-if="loggedIn">
-            <!-- <div class="jumbotron">
-            <h1 class="display-4">My Sites</h1>
-            <p class="lead">This is my amazing site.</p>
-            <hr class="my-4">
-            <p>It just works.</p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">Yay</a>
-        </div> -->
 
             <nav class="navbar navbar-expand-lg navbar-light bg-dark">
                 <a class="navbar-brand text-light" href="#">Mini-wp</a>
@@ -83,185 +76,43 @@
 
             <div class="row">
                 <div class="col-md-3">
-                    <div id="list-example" class="list-group">
-                        <a class="list-group-item list-group-item-action" href="#">View site</a>
-                        <a v-on:click="showEmptyForm" class="list-group-item list-group-item-action" href="#">New
-                            Article</a>
-                        <a v-on:click="getArticles" class="list-group-item list-group-item-action" href="#">Refresh</a>
-                    </div>
-                    <hr class="my-4">
-                    <ul class="list-group">
-                        <a href="#" v-on:click="switchPanel('articles')"
-                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Articles
-                            <span class="badge badge-primary badge-pill">{{articles.length}}</span>
-                        </a>
-                        <a href="#" v-on:click="switchPanel('tags')"
-                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Tags
-                            <span class="badge badge-primary badge-pill">
-                                {{totalTagsOfArticles}}
-                            </span>
-                        </a>
-                        <a href="#"
-                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            Images
-                            <span class="badge badge-primary badge-pill">0</span>
-                        </a>
+                    <page-menu v-bind:articles="articles" v-on:show-empty-form="showEmptyForm()"
+                        v-on:switch-panel="switchPanel($event)" v-on:get-articles="getArticles($event)"></page-menu>
                 </div>
 
                 <div class="col-md-9">
-                    <div v-for="tag in articleTags" class="list-group" v-if="showTags">
-                        <a href="#" v-on:click="tagSelect(tag)"
-                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            {{tag}}
-                            <span class="badge badge-primary badge-pill">
-                                {{articles.filter(e => e.tags.includes(tag)).length}}
-                            </span>
-                        </a>
+                    <div class="alert alert-primary" role="alert" v-if="searchBox.trim()!==''">
+                        Showing search result for : {{searchBox}}
                     </div>
 
-                    <div v-for="article in articles" class="card" v-if="showArticles">
-                        <div class="card-header">
-                            {{article.createdAt.split('T').join(' ').split('.')[0]}}
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{article.title}}</h5>
-                            <p class="card-text"><strong>Author</strong> : {{article.user.name}}</p>
-                            <p class="card-text">{{article.content | striphtml}}</p>
-                            <p class="card-text">
-                                <strong>Tags</strong> :
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-secondary" v-for="tag in article.tags"
-                                        v-on:click="tagSelect(tag)">{{tag}}</button>
-                                </div>
-                            </p>
-                            <img class="card-img-bottom" v-if="article.fileUrl" v-bind:src="article.fileUrl"
-                                alt="Card image cap">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-secondary"
-                                    v-on:click="showEditForm(article)">Edit</button>
-                                <button type="button" class="btn btn-secondary"
-                                    v-on:click="articleDelete(article)">Delete</button>
-                            </div>
-                        </div>
-                    </div>
+                    <tag-list v-if="showTags" v-bind:article-tags="articleTags" v-bind:articles="articles"
+                        v-on:tag-select="tagSelect($event)">
+                    </tag-list>
 
-                    <div v-if="showArticleForm">
-                        <!-- <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="basic-addon1">Title</span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Username" aria-label="Username"
-                        aria-describedby="basic-addon1">
-                </div>
-    
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Recipient's username"
-                        aria-label="Recipient's username" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">@example.com</span>
-                    </div>
-                </div> -->
+                    <article-list v-if="showArticles" v-bind:articles="articles"
+                        v-on:show-edit-form="showEditForm($event)" v-on:article-delete="articleDelete($event)"
+                        v-on:tag-select="tagSelect($event)">
+                    </article-list>
 
-                        <label for="basic-url">Your article</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon3">Title</span>
-                            </div>
-                            <input type="text" v-model="articleFormTitle" class="form-control" id="basic-url"
-                                placeholder="Title" aria-describedby="basic-addon3">
-                            <div class="input-group-append">
-                                <span class="input-group-text">:)</span>
-                            </div>
-                        </div>
-
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Tags</span>
-                            </div>
-                            <input type="text" v-model="articleFormTags" class="form-control"
-                                placeholder="tag1,tag2,tag3" aria-label="Amount">
-                            <div class="input-group-append">
-                                <span class="input-group-text">Comma separated tags</span>
-                            </div>
-                        </div>
-
-                        <!-- <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Articles</span>
-                            </div>
-                            <textarea v-model="articleFormContent" class="form-control"
-                                aria-label="With textarea"></textarea>
-                        </div> -->
-
-                        <div>
-                            <wysiwyg v-model="articleFormContent" />
-                        </div>
-
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="articleFormFile">
-                            <label class="custom-file-label" for="articleFormFile">Choose file</label>
-                        </div>
-
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" v-on:click="articleFormSubmit" class="btn btn-secondary">Save</button>
-                            <button type="button" v-on:click="switchPanel('articles')"
-                                class="btn btn-secondary">Cancel</button>
-                        </div>
-                    </div>
+                    <article-form v-if="showArticleForm" v-on:switch-panel="switchPanel($event)"
+                        v-on:display-error="displayError($event)" v-on:get-articles="getArticles()"
+                        v-bind:article-form-title-copy="articleFormTitle"
+                        v-bind:article-form-tags-copy="articleFormTags"
+                        v-bind:article-form-content-copy="articleFormContent"
+                        v-bind:article-edit-id-copy="articleEditId">
+                    </article-form>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col bg-dark">
-                    <ul class="nav nav-pills">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">My sites</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Privacy policy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Terms and conditions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">(c) Mini-wp</a>
-                        </li>
-                    </ul>
+                    <page-footer></page-footer>
                 </div>
             </div>
         </div>
 
         <div class="container" id="loginRegister" v-if="loggedIn===false">
-            <div class="row">
-                <h1>Mini WP</h1>
-            </div>
-            <div class="row">
-                <div v-on:submit.prevent="login" id="loginFrame" class="col">
-                    <form class="form-group card" id="loginForm">
-                        <h2>Login</h2>
-                        <label for="loginEmail" class="control-label">Email</label>
-                        <input type="email" class="form-control" v-model="loginEmail">
-                        <label for="loginPassword" class="control-label">Password</label>
-                        <input type="password" class="form-control" v-model="loginPassword">
-                        <button id="loginSubmit" class="btn btn-primary">Login</button>
-                    </form>
-                </div>
-
-                <div id="registerFrame" class="col">
-                    <div class="form-group card" id="registerForm">
-                        <h2>Register</h2>
-                        <label for="registerName" class="control-label">Name</label>
-                        <input type="text" class="form-control" v-model="registerName">
-                        <label for="registerEmail" class="control-label">Email</label>
-                        <input type="email" class="form-control" v-model="registerEmail">
-                        <label for="registerPassword" class="control-label">Password</label>
-                        <input type="password" class="form-control" v-model="registerPassword">
-                        <button v-on:click="register" id="registerSubmit" class="btn btn-primary">Register</button>
-                    </div>
-                </div>
-            </div>
+            <loginregister-form></loginregister-form>
         </div>
 
         <div class="container">
@@ -270,6 +121,12 @@
     </div>
 
     <script src="/lib/main.js"></script>
+    <script src="components/loginregister-form.js"></script>
+    <script src="components/page-menu.js"></script>
+    <script src="components/article-list.js"></script>
+    <script src="components/tag-list.js"></script>
+    <script src="components/article-form.js"></script>
+    <script src="components/page-footer.js"></script>
     <script src="main.js"></script>
 </body>
 
