@@ -82,7 +82,7 @@
             </nav>
 
             <div class="row">
-                <div class="col-3">
+                <div class="col-md-3">
                     <div id="list-example" class="list-group">
                         <a class="list-group-item list-group-item-action" href="#">View site</a>
                         <a v-on:click="showEmptyForm" class="list-group-item list-group-item-action" href="#">New
@@ -110,7 +110,7 @@
                         </a>
                 </div>
 
-                <div class="col-9">
+                <div class="col-md-9">
                     <div v-for="tag in articleTags" class="list-group" v-if="showTags">
                         <a href="#" v-on:click="tagSelect(tag)"
                             class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
@@ -127,8 +127,15 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{{article.title}}</h5>
+                            <p class="card-text"><strong>Author</strong> : {{article.user.name}}</p>
                             <p class="card-text">{{article.content | striphtml}}</p>
-                            <p class="card-text"><strong>Tags : </strong> {{article.tags.join(',')}}</p>
+                            <p class="card-text">
+                                <strong>Tags</strong> :
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-secondary" v-for="tag in article.tags"
+                                        v-on:click="tagSelect(tag)">{{tag}}</button>
+                                </div>
+                            </p>
                             <img class="card-img-bottom" v-if="article.fileUrl" v-bind:src="article.fileUrl"
                                 alt="Card image cap">
                             <div class="btn-group" role="group" aria-label="Basic example">
