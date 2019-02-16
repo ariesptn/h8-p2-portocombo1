@@ -8,6 +8,8 @@ const { articleAuthorization, } = require('../middlewares/articleAuth')
 
 const upload = multer({ dest: '/tmp' })
 
+router.get('/all', ArticleController.findAll)
+
 router.use(authentication)
 router.get('/', ArticleController.find)
 router.post('/', ArticleController.create)

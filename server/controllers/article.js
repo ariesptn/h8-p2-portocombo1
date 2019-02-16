@@ -4,7 +4,18 @@ class ArticleController {
     static async find(req, res) {
         try {
             let articleData = await models.Article.find({ user: req.auth._id })
-                .populate('user').lean()
+                .sort({ createdAt: -1 }).populate('user').lean()
+            res.status(200).json(articleData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+
+    static async findAll(req, res) {
+        try {
+            let articleData = await models.Article.find()
+                .sort({ createdAt: -1 }).populate('user').limit(100).lean()
             res.status(200).json(articleData)
         } catch (err) {
             console.log(err)
@@ -75,9 +86,8 @@ class ArticleController {
             if (!articleData) {
                 throw { message: 'article not found' }
             }
-            let fileUrl = req.file.cloudStoragePublicUrl
-            if (fileUrl) {
-                articleData.fileUrl = fileUrl
+            if (req.file) {
+                articleData.fileUrl = req.file.cloudStoragePublicUrl
                 articleData.save()
             }
             res.status(200).send(articleData)

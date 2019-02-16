@@ -38,17 +38,28 @@ const userSchema = mongoose.Schema({
     googleClientId: String,
 })
 
-userSchema.pre('save', async function (next) {
-    let password = await bcrypt.hash(this.password, 1)
-    this.password = password
-    next()
-})
-userSchema.post('findOneAndUpdate', async function (value, next) {
-    let password = await bcrypt.hash(value.password, 1)
-    // value.password = password
-    // value.save()
-    next()
-})
+userSchema.pre('save', function (next) {
+    let user = this;
+
+    // only hash the password if it has been modified (or is new)
+    if (!user.isModified('password')) return next();
+
+    // hash the password
+    bcrypt.hash(user.password, 1, function (err, hash) {
+        if (err) return next(err);
+
+        // override the cleartext password with the hashed one
+        user.password = hash;
+        next();
+    });
+});
+
+userSchema.methods.comparePassword = function (candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+        if (err) return cb(err);
+        cb(null, isMatch);
+    });
+};
 
 const User = mongoose.model('users', userSchema)
 
