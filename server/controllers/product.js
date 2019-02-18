@@ -24,7 +24,7 @@ class ProductController {
     static async create(req, res) {
         try {
             let productData = await models.Product.create({
-                title: req.body.title,
+                name: req.body.name,
                 description: req.body.description,
                 price: req.body.price,
             })
@@ -39,7 +39,7 @@ class ProductController {
         try {
             let productData = await models.Product.findOneAndUpdate({ _id: req.params.productId }, {
                 $set: {
-                    title: req.body.title,
+                    name: req.body.name,
                     description: req.body.description,
                     price: req.body.price,
                 }

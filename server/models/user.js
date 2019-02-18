@@ -35,6 +35,7 @@ const userSchema = mongoose.Schema({
         ]
     },
     password: String,
+    role: String,
     googleClientId: String,
 })
 

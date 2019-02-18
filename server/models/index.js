@@ -5,4 +5,5 @@ module.exports = {
     Todo: require('./todo'),
     Project: require('./project'),
     Article: require('./article'),
+    Transaction: require('./transaction'),
 }

@@ -3,7 +3,8 @@ const models = require('../models')
 class CartController {
     static async find(req, res) {
         try {
-            let cartData = await models.Cart.find({ user: req.auth._id }).lean()
+            let cartData = await models.Cart.find({ user: req.auth._id })
+                .populate('user').populate('product').lean()
             res.status(200).json(cartData)
         } catch (err) {
             console.log(err)
@@ -13,7 +14,8 @@ class CartController {
 
     static async findOne(req, res) {
         try {
-            let cartData = await models.Cart.findOne({ _id: req.params.cartId }).lean()
+            let cartData = await models.Cart.findOne({ _id: req.params.cartId })
+                .populate('user').populate('product').lean()
             res.status(200).json(cartData)
         } catch (err) {
             console.log(err)
