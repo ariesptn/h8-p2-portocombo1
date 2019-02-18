@@ -26,6 +26,7 @@ class ProductController {
             let productData = await models.Product.create({
                 title: req.body.title,
                 description: req.body.description,
+                price: req.body.price,
             })
             res.status(201).json(productData)
         } catch (err) {
@@ -40,6 +41,7 @@ class ProductController {
                 $set: {
                     title: req.body.title,
                     description: req.body.description,
+                    price: req.body.price,
                 }
             })
             res.status(201).json(productData)
@@ -54,6 +56,24 @@ class ProductController {
             let productData = await models.Product.findOneAndDelete({ _id: req.params.productId })
             res.status(200).json(productData)
         } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+
+    static async fileUpload(req, res) {
+        try {
+            let productData = await models.Product.findById(req.params.productId)
+            if (!productData) {
+                throw { message: 'product not found' }
+            }
+            if (req.file) {
+                productData.fileUrl = req.file.cloudStoragePublicUrl
+                productData.save()
+            }
+            res.status(200).send(productData)
+        }
+        catch (err) {
             console.log(err)
             res.status(500).json(err)
         }

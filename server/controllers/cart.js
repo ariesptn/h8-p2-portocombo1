@@ -23,10 +23,18 @@ class CartController {
 
     static async create(req, res) {
         try {
-            let cartData = await models.Cart.create({
-                user: req.auth._id,
-                product: req.body.productId,
-            })
+            let cartData = await models.Cart.findOne({ product: req.body.productId, user: req.auth._id })
+            if (cartData) {
+                cartData.amount = req.body.amount
+                cartData.save()
+                cartData = await models.Cart.findOne({ product: req.body.productId }).lean()
+            } else {
+                cartData = await models.Cart.create({
+                    user: req.auth._id,
+                    product: req.body.productId,
+                    amount: req.body.amount,
+                })
+            }
             res.status(201).json(cartData)
         } catch (err) {
             console.log(err)
@@ -39,7 +47,7 @@ class CartController {
             let cartData = await models.Cart.findOneAndUpdate({ _id: req.params.cartId }, {
                 $set: {
                     user: req.auth._id,
-                    product: req.body.productId,
+                    amount: req.body.amount,
                 }
             })
             res.status(201).json(cartData)
