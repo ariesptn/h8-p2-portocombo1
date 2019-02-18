@@ -2,7 +2,7 @@ const chai = require('chai'),
     chaiHttp = require('chai-http'),
     expect = chai.expect,
     app = require('../app'),
-    models = require('../models/')
+    models = require('../models')
 
 chai.use(chaiHttp)
 
@@ -11,6 +11,7 @@ before(async function () {
         await models.User.deleteMany({})
         await models.Cart.deleteMany({})
         await models.Product.deleteMany({})
+        await models.Transaction.deleteMany({})
         await models.User.create({
             name: 'user1',
             email: 'user1@example.com',
@@ -117,6 +118,7 @@ describe('product CRUD test', function () {
                 expect(err).to.be.null
                 expect(res).to.have.status(200)
                 expect(res.body).to.be.an('array')
+                expect(res.body[0]).to.have.property('_id')
                 done()
             })
     })
@@ -237,7 +239,7 @@ describe('cart test', function () {
             })
     })
 
-    it('recreates the card for another tests', function (done) {
+    it('recreates the cart for another tests', function (done) {
         chai
             .request(app)
             .post('/api/carts')
@@ -252,6 +254,38 @@ describe('cart test', function () {
                 expect(res.body.amount).to.equal(1)
                 expect(res.body).to.have.property('_id')
                 cart1id = res.body._id
+                done()
+            })
+    })
+})
+
+let transaction1id = ''
+
+describe('checkout', function () {
+    it('checkout', function (done) {
+        chai
+            .request(app)
+            .post('/api/transactions/checkout')
+            .set('token', user1token)
+            .end((err, res) => {
+                expect(err).to.be.null
+                expect(res).to.have.status(201)
+                expect(res.body).to.have.property('_id')
+                transaction1id = res.body._id
+                done()
+            })
+    })
+
+    it('get transactions history', function (done) {
+        chai
+            .request(app)
+            .get('/api/transactions')
+            .set('token', user1token)
+            .end((err, res) => {
+                expect(err).to.be.null
+                expect(res).to.have.status(200)
+                expect(res.body).to.be.an('array')
+                expect(res.body[0]).to.have.property('_id')
                 done()
             })
     })

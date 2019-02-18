@@ -5,6 +5,7 @@ const { authentication } = require('../middlewares/auth')
 const { cartAuthorization, adminAuthorization, } = require('../middlewares/shopAuth')
 
 router.use(authentication)
-router.post('/', cartAuthorization, TransactionController.checkout)
+router.post('/checkout', TransactionController.checkout)
+router.get('/', TransactionController.find)
 
 module.exports = router
