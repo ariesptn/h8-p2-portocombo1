@@ -286,6 +286,21 @@ describe('checkout', function () {
                 expect(res).to.have.status(200)
                 expect(res.body).to.be.an('array')
                 expect(res.body[0]).to.have.property('_id')
+                expect(res.body[0]._id).to.equal(transaction1id)
+                done()
+            })
+    })
+
+    it("make sure other users can't see", function (done) {
+        chai
+            .request(app)
+            .get('/api/transactions')
+            .set('token', user2token)
+            .end((err, res) => {
+                expect(err).to.be.null
+                expect(res).to.have.status(200)
+                expect(res.body).to.be.an('array')
+                expect(res.body.length).to.equal(0)
                 done()
             })
     })
