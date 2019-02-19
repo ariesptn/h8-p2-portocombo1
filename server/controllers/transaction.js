@@ -5,11 +5,16 @@ class TransactionController {
         try {
             let cartData = await models.Cart.find({ user: req.auth._id })
                 .populate('product').lean()
-            let transactionData = await models.Transaction.create({
-                user: req.auth._id,
-                items: cartData,
-                date: new Date(),
-            })
+            let transactionData
+            if (cartData) {
+                transactionData = await models.Transaction.create({
+                    user: req.auth._id,
+                    items: cartData,
+                    date: new Date(),
+                })
+            } else {
+                throw { message: 'empty cart' }
+            }
             cartData = await models.Cart.deleteMany({ user: req.auth._id })
             res.status(201).json(transactionData)
         } catch (err) {
