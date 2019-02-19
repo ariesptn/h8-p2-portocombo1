@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Product from "@/pages/product.vue";
 import Cart from "@/pages/cart.vue"
 import Transaction from '@/pages/transaction.vue'
+import AdminProduct from '@/pages/admin-product.vue'
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/transactions',
       name: 'transactions',
       component: Transaction
+    },
+    {
+      path: '/admin-products',
+      name: 'admin-products',
+      component: AdminProduct,
     },
     {
       path: '/about',

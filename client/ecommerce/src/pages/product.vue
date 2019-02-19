@@ -9,7 +9,7 @@
           v-for="(product, index) in productData"
           :key="index"
         >
-          <img class="card-img-top" src="https://picsum.photos/160/90/?random" alt="Card image cap">
+          <img class="card-img-top" :src="product.fileUrl" alt="Card image cap">
           <div class="card-body">
             <h5 class="card-title">{{product.name}}</h5>
             <p class="card-text">{{product.description}}</p>

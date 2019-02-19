@@ -10,7 +10,7 @@
     </div>
 
     <div class="container" v-if="isLoggedIn">
-      <page-navbar :user-name="userName" :user-email="userEmail"></page-navbar>
+      <page-navbar :user-name="userName" :user-email="userEmail" :user-role="userRole"></page-navbar>
 
       <router-view
         :product-data="productData"
@@ -36,7 +36,7 @@
 <script>
 import pageNavbar from "@/pages/page-navbar.vue";
 import loginregister from "@/pages/loginregister.vue";
-import pageFooter from "@/pages/page-footer.vue"
+import pageFooter from "@/pages/page-footer.vue";
 
 export default {
   components: {
@@ -51,9 +51,10 @@ export default {
         if (loginStatus) {
           this.userName = loginResponse.name;
           this.userEmail = loginResponse.email;
+          this.userRole = loginResponse.role || "";
         }
       }
-    }, 500);
+    }, 1000);
   },
   data() {
     return {
@@ -62,6 +63,7 @@ export default {
       errorMessage: "",
       userName: "",
       userEmail: "",
+      userRole: "",
       productData: [],
       cartData: []
     };
