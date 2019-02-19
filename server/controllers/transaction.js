@@ -23,10 +23,21 @@ class TransactionController {
         }
     }
 
+    static async findAll(req, res) {
+        try {
+            let transactionData = await models.Transaction.find({})
+                .sort({ date: -1 }).limit(100).populate('user').lean()
+            res.status(200).json(transactionData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+
     static async find(req, res) {
         try {
             let transactionData = await models.Transaction.find({ user: req.auth._id })
-                .sort({ date: -1 }).lean()
+                .sort({ date: -1 }).limit(100).lean()
             res.status(200).json(transactionData)
         } catch (err) {
             console.log(err)

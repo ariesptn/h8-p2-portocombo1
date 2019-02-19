@@ -58,16 +58,17 @@
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <router-link class="dropdown-item" to="/admin-products">Products</router-link>
                 <div class="dropdown-divider"></div>
-                <router-link class="dropdown-item" to="/transactions">Transactions</router-link>
+                <router-link class="dropdown-item" to="/admin-transactions">Transactions</router-link>
               </div>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
+          <form class="form-inline my-2 my-lg-0" @submit.prevent="searchProducts()">
             <input
               class="form-control mr-sm-2"
               type="search"
               placeholder="Search"
               aria-label="Search"
+              v-model="searchBox"
             >
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
@@ -79,8 +80,21 @@
 
 <script>
 export default {
-  props: ["userName", "userEmail",'userRole'],
+  props: ["userName", "userEmail", "userRole"],
+  data() {
+    return {
+      searchBox: ""
+    };
+  },
+  watch: {
+    searchBox() {
+      //this.searchProducts();
+    }
+  },
   methods: {
+    searchProducts() {
+      this.$emit("search-products", this.searchBox);
+    },
     signOut() {
       signOut();
     }

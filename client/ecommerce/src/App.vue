@@ -10,7 +10,12 @@
     </div>
 
     <div class="container" v-if="isLoggedIn">
-      <page-navbar :user-name="userName" :user-email="userEmail" :user-role="userRole"></page-navbar>
+      <page-navbar
+        :user-name="userName"
+        :user-email="userEmail"
+        :user-role="userRole"
+        @search-products="searchProducts($event)"
+      ></page-navbar>
 
       <router-view
         :product-data="productData"
@@ -64,11 +69,19 @@ export default {
       userName: "",
       userEmail: "",
       userRole: "",
+      productDataAll: [],
       productData: [],
       cartData: []
     };
   },
   methods: {
+    async searchProducts(searchQuery) {
+      this.productData = this.productDataAll.filter(e => {
+        return (
+          e.name.includes(searchQuery) || e.description.includes(searchQuery)
+        );
+      });
+    },
     async getProducts() {
       try {
         let productData = await axios({
@@ -77,7 +90,8 @@ export default {
           url: "/api/products",
           headers: { token }
         });
-        this.productData = productData.data;
+        this.productDataAll = productData.data;
+        this.productData = this.productDataAll.map(e => e);
       } catch (err) {
         this.displayError(err);
       }
