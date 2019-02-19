@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Product from "@/pages/product.vue";
+import Cart from "@/pages/cart.vue"
 
 Vue.use(Router)
 
@@ -12,6 +14,16 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/products',
+      name: 'products',
+      component: Product
+    },
+    {
+      path: '/carts',
+      name: 'carts',
+      component: Cart
     },
     {
       path: '/about',

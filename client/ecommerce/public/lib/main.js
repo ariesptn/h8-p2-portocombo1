@@ -20,7 +20,7 @@ function signOut() {
 
 function login(data) {
     axios({
-        url: `${baseUrl}/api/users/login`,
+        url: `${baseURL}/api/users/login`,
         method: 'POST',
         data,
     })
@@ -36,7 +36,7 @@ function login(data) {
 
 function register(data) {
     axios({
-        url: `${baseUrl}/api/users/register`,
+        url: `${baseURL}/api/users/register`,
         method: 'POST',
         data,
     })
@@ -62,7 +62,7 @@ function onSignIn(googleUser) {
     console.log('Token: ' + googleUser.getAuthResponse().id_token)*/
     if (!localStorage.getItem('token')) {
         axios({
-            url: `${baseUrl}/api/googleloginverify`,
+            url: `${baseURL}/api/googleloginverify`,
             headers: {
                 'googletoken': googleUser.getAuthResponse().id_token
             }
@@ -80,9 +80,12 @@ function onSignIn(googleUser) {
 }
 
 function loginVerify() {
+    gapi.load('auth2', function () {
+        gapi.auth2.init();
+    });
     if (localStorage.getItem('token')) {
         axios({
-            url: `${baseUrl}/api/users/loginverify`,
+            url: `${baseURL}/api/users/loginverify`,
             headers: { token: localStorage.getItem('token') }
         })
             .then(response => {
