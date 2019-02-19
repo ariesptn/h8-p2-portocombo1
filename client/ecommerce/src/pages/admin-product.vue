@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col">
+    <div class="col" v-if="userRole==='admin'">
       <h1>Admin Product</h1>
       <table>
         <tr>
@@ -66,7 +66,7 @@
 
 <script>
 export default {
-  props: ["productData"],
+  props: ["productData", "userRole"],
   created() {
     this.$emit("get-products", null);
   },

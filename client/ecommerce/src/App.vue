@@ -18,6 +18,9 @@
       ></page-navbar>
 
       <router-view
+        :user-name="userName"
+        :user-email="userEmail"
+        :user-role="userRole"
         :product-data="productData"
         :cart-data="cartData"
         @display-error="displayError($event)"
@@ -57,6 +60,10 @@ export default {
           this.userName = loginResponse.name;
           this.userEmail = loginResponse.email;
           this.userRole = loginResponse.role || "";
+        } else {
+          this.userName = "";
+          this.userEmail = "";
+          this.userRole = "";
         }
       }
     }, 1000);

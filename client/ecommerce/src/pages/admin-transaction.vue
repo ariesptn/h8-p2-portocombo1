@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col">
+    <div class="col" v-if="userRole==='admin'">
       <h1>Transaction History</h1>
       <div
         class="card"
@@ -38,6 +38,7 @@
 
 <script>
 export default {
+  props:['userRole'],
   created() {
     this.getTransactions();
   },
