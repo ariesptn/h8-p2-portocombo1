@@ -35,7 +35,7 @@
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
-              >Menu</a>
+              >User</a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <router-link class="dropdown-item" to="/transactions">Transaction history</router-link>
                 <div class="dropdown-divider"></div>
