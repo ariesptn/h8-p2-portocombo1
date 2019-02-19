@@ -26,7 +26,7 @@ class TransactionController {
     static async find(req, res) {
         try {
             let transactionData = await models.Transaction.find({ user: req.auth._id })
-                .lean()
+                .sort({ date: -1 }).lean()
             res.status(200).json(transactionData)
         } catch (err) {
             console.log(err)

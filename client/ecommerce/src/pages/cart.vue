@@ -19,10 +19,13 @@
         </div>
       </div>
       <div class="row">
-        <div class="col">Subtotal : {{subtotal}}</div>
-        <div class="col">
-          <button class="btn btn-primary">Checkout</button>
+        <div class="col-6">
+          <button class="btn btn-primary" @click="checkout()">Checkout</button>
         </div>
+        <div class="col"></div>
+        <div class="col">Subtotal :</div>
+        <div class="col">{{subtotal}}</div>
+        <div class="col"></div>
       </div>
     </div>
   </div>
@@ -47,6 +50,19 @@ export default {
           method: "DELETE",
           baseURL,
           url: "/api/carts/" + cartId,
+          headers: { token }
+        });
+        this.$emit("get-carts", null);
+      } catch (err) {
+        this.$emit("display-error", err);
+      }
+    },
+    async checkout() {
+      try {
+        let checkoutItem = await axios({
+          method: "POST",
+          baseURL,
+          url: "/api/transactions/checkout",
           headers: { token }
         });
         this.$emit("get-carts", null);

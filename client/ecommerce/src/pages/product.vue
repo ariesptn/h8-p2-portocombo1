@@ -20,13 +20,13 @@
                 @click="addToCart(product._id,itemAmounts[index])"
               >Add to cart</button>
               <div>
-                Amount :
+                Quantity :
                 <input type="number" v-model="itemAmounts[index]">
               </div>
             </div>
             <div v-if="cartData.map(e=>e.product._id).includes(product._id)">
               <button @click="removeFromCart(product._id)" class="btn btn-primary">Remove from cart</button>
-              <div>Amount : {{cartData.filter(e=>e.product._id===product._id)[0].amount}}</div>
+              <div>Quantity : {{cartData.filter(e=>e.product._id===product._id)[0].amount}}</div>
             </div>
           </div>
         </div>
