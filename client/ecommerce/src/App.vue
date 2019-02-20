@@ -53,14 +53,7 @@ export default {
     pageFooter
   },
   created() {
-    loginDetails.listener = () => {
-      if (loginStatus) {
-        this.userName = loginResponse.name;
-        this.userEmail = loginResponse.email;
-        this.userRole = loginResponse.role || "";
-        this.isLoggedIn = loginStatus;
-      }
-    };
+    this.loginCheck()
   },
   data() {
     return {
@@ -109,6 +102,22 @@ export default {
       } catch (err) {
         this.displayError(err);
       }
+    },
+    loginCheck() {
+      loginDetails.listener = () => {
+        if (loginDetails.status) {
+          this.userName = loginDetails.response.name;
+          this.userEmail = loginDetails.response.email;
+          this.userRole = loginDetails.response.role || "";
+          this.isLoggedIn = true;
+        } else {
+          this.userName = "";
+          this.userEmail = "";
+          this.userRole = "";
+          this.isLoggedIn = false;
+          this.displayError(loginDetails.response);
+        }
+      };
     },
     displayError: function(error) {
       if (error.response) {

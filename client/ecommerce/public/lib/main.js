@@ -1,21 +1,24 @@
 let token = localStorage.getItem('token')
 let baseURL = 'http://localhost:3000'
-let loginStatus = false
-let loginResponse = {}
 
 let loginDetails = {
-    _responseData: {},
+    _status: false,
+    _response: {},
     _listener: function () { },
-    set responseData(data) {
-        this._responseData = data
+    setData(status, response) {
+        this._response = response
+        this._status = status
         this._listener()
-    },
-    get responseData() {
-        return this._responseData
     },
     set listener(event) {
         this._listener = event
-    }
+    },
+    get response() {
+        return this._response
+    },
+    get status() {
+        return this._status
+    },
 }
 
 let spinner = `
@@ -117,7 +120,5 @@ function loginVerify() {
 loginVerify()
 
 function onLoginChecked(isSuccess, response) {
-    loginStatus = isSuccess
-    loginResponse = response
-    loginDetails.responseData = response
+    loginDetails.setData(isSuccess, response)
 }
