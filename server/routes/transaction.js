@@ -8,4 +8,6 @@ router.use(authentication)
 router.post('/checkout', TransactionController.checkout)
 router.get('/', TransactionController.find)
 
+router.get('/all', adminAuthorization, TransactionController.findAll)
+
 module.exports = router

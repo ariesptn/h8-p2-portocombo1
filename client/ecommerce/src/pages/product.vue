@@ -5,11 +5,11 @@
       <div class="d-flex flex-wrap justify-content-around">
         <div
           class="card"
-          style="width: 18rem;"
+          style="width: 17rem;"
           v-for="(product, index) in productData"
           :key="index"
         >
-          <img class="card-img-top" :src="product.fileUrl" alt="Card image cap">
+          <img class="card-img-top" :src="product.fileUrl">
           <div class="card-body">
             <h5 class="card-title">{{product.name}}</h5>
             <p class="card-text">{{product.description}}</p>
