@@ -3,6 +3,21 @@ let baseURL = 'http://localhost:3000'
 let loginStatus = false
 let loginResponse = {}
 
+let loginDetails = {
+    _responseData: {},
+    _listener: function () { },
+    set responseData(data) {
+        this._responseData = data
+        this._listener()
+    },
+    get responseData() {
+        return this._responseData
+    },
+    set listener(event) {
+        this._listener = event
+    }
+}
+
 let spinner = `
     <div class="spinner-border" role="status">
     <span class="sr-only">Loading...</span>
@@ -104,4 +119,5 @@ loginVerify()
 function onLoginChecked(isSuccess, response) {
     loginStatus = isSuccess
     loginResponse = response
+    loginDetails.responseData = response
 }

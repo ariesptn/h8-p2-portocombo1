@@ -45,16 +45,14 @@ export default {
     pageFooter
   },
   created() {
-    setInterval(() => {
-      if (loginStatus !== this.isLoggedIn) {
+    loginDetails.listener = () => {
+      if (loginStatus) {
+        this.userName = loginResponse.name;
+        this.userEmail = loginResponse.email;
+        this.userRole = loginResponse.role || "";
         this.isLoggedIn = loginStatus;
-        if (loginStatus) {
-          this.userName = loginResponse.name;
-          this.userEmail = loginResponse.email;
-          this.userRole = loginResponse.role || "";
-        }
       }
-    }, 1000);
+    };
   },
   data() {
     return {
