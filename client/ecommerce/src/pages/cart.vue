@@ -66,6 +66,7 @@ export default {
           headers: { token }
         });
         this.$emit("get-carts", null);
+        this.$router.push({ path: `/transactions`})
       } catch (err) {
         this.$emit("display-error", err);
       }
