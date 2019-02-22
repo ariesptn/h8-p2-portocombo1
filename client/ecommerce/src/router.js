@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Product from "@/pages/product.vue";
 import Cart from "@/pages/cart.vue"
 import Transaction from '@/pages/transaction.vue'
+import Admin from '@/pages/admin.vue'
 import AdminProduct from '@/pages/admin-product.vue'
 import AdminTransaction from '@/pages/admin-transaction.vue'
 
@@ -34,14 +35,21 @@ export default new Router({
       component: Transaction
     },
     {
-      path: '/admin-products',
-      name: 'admin-products',
-      component: AdminProduct,
-    },
-    {
-      path: '/admin-transactions',
-      name: 'admin-transactions',
-      component: AdminTransaction
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
+      children: [
+        {
+          path: 'products',
+          name: 'admin-products',
+          component: AdminProduct
+        },
+        {
+          path: 'transactions',
+          name: 'admin-transactions',
+          component: AdminTransaction
+        }
+      ]
     },
     {
       path: '/about',

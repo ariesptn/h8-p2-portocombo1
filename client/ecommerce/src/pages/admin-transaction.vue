@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col" v-if="userRole==='admin'">
+    <div class="col">
       <h1>Transaction History</h1>
       <div
         class="card"

@@ -27,6 +27,7 @@ class ProductController {
                 name: req.body.name,
                 description: req.body.description,
                 price: req.body.price,
+                stock: req.body.stock,
             })
             res.status(201).json(productData)
         } catch (err) {
@@ -42,6 +43,7 @@ class ProductController {
                     name: req.body.name,
                     description: req.body.description,
                     price: req.body.price,
+                    stock: req.body.stock,
                 }
             })
             res.status(201).json(productData)

@@ -45,21 +45,8 @@
             <li class="nav-item">
               <a class="nav-link disabled" href="#">{{userName}} ({{userEmail}})</a>
             </li>
-            <li class="nav-item dropdown" v-if="userRole=='admin'">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >Admin</a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <router-link class="dropdown-item" to="/admin-products">Products</router-link>
-                <div class="dropdown-divider"></div>
-                <router-link class="dropdown-item" to="/admin-transactions">Transactions</router-link>
-              </div>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/admin">Admin</router-link>
             </li>
           </ul>
           <form class="form-inline my-2 my-lg-0" @submit.prevent="searchProducts()">

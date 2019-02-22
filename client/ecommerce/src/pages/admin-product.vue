@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col" v-if="userRole==='admin'">
+    <div class="col">
       <h1>Admin Product</h1>
       <table>
         <tr>
