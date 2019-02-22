@@ -11,6 +11,7 @@ const transactionSchema = mongoose.Schema({
         amount: Number,
     }],
     date: Date,
+    status: String,
 })
 
 const Transaction = mongoose.model('transactions', transactionSchema)

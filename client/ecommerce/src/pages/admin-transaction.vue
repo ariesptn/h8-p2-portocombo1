@@ -29,6 +29,24 @@
               <div class="col">Subtotal :</div>
               <div class="col">{{transaction.items.reduce((a,b)=>a+b.amount*b.product.price,0)}}</div>
             </div>
+            <div class="row">
+              <div
+                class="col"
+                v-if="transaction.status=='unpaid' || !transaction.status"
+              >Waiting for payment</div>
+              <div class="col" v-if="transaction.status=='paid'">
+                The customer has already completed the payment.
+                <button
+                  class="btn btn-primary"
+                  @click="send(transaction._id)"
+                >I have shipped the item to the customer</button>
+              </div>
+              <div
+                class="col"
+                v-if="transaction.status=='sent'"
+              >Waiting for the customer to confirm payment</div>
+              <div class="col" v-if="transaction.status=='finished'">Status : Complete</div>
+            </div>
           </div>
         </div>
       </div>
@@ -38,7 +56,7 @@
 
 <script>
 export default {
-  props:['userRole'],
+  props: ["userRole"],
   created() {
     this.getTransactions();
   },
@@ -57,6 +75,19 @@ export default {
           headers: { token }
         });
         this.transactionData = transactionData.data;
+      } catch (err) {
+        this.$emit("display-error", err);
+      }
+    },
+    async send(transactionId) {
+      try {
+        let transactionData = await axios({
+          method: "POST",
+          baseURL,
+          url: "/api/transactions/send/" + transactionId,
+          headers: { token }
+        });
+        this.getTransactions();
       } catch (err) {
         this.$emit("display-error", err);
       }

@@ -11,6 +11,7 @@ class TransactionController {
                     user: req.auth._id,
                     items: cartData,
                     date: new Date(),
+                    status: 'unpaid',
                 })
             } else {
                 throw { message: 'empty cart' }
@@ -38,6 +39,54 @@ class TransactionController {
         try {
             let transactionData = await models.Transaction.find({ user: req.auth._id })
                 .sort({ date: -1 }).limit(100).lean()
+            res.status(200).json(transactionData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+
+    static async pay(req, res) {
+        try {
+            let transactionData = await models.Transaction.findById(req.params.transactionId)
+            if (transactionData) {
+                if (transactionData.status == 'unpaid' || !transactionData.status) {
+                    transactionData.status = 'paid'
+                }
+                transactionData.save()
+            }
+            res.status(200).json(transactionData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+
+    static async send(req, res) {
+        try {
+            let transactionData = await models.Transaction.findById(req.params.transactionId)
+            if (transactionData) {
+                if (transactionData.status == 'paid') {
+                    transactionData.status = 'sent'
+                }
+                transactionData.save()
+            }
+            res.status(200).json(transactionData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+
+    static async finish(req, res) {
+        try {
+            let transactionData = await models.Transaction.findById(req.params.transactionId)
+            if (transactionData) {
+                if (transactionData.status == 'sent') {
+                    transactionData.status = 'finished'
+                }
+                transactionData.save()
+            }
             res.status(200).json(transactionData)
         } catch (err) {
             console.log(err)

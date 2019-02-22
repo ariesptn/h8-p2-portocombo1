@@ -17,6 +17,23 @@ async function cartAuthorization(req, res, next) {
     }
 }
 
+async function transactionAuthorization(req, res, next) {
+    try {
+        let cartData = await models.Transaction.findById(req.params.transactionId)
+        if (!cartData) {
+            throw { message: 'transaction is not found' }
+        } else if (req.auth._id == cartData.user) {
+            next()
+        }
+        else {
+            throw { message: 'not your transaction' }
+        }
+    } catch (err) {
+        res.status(401).json(err)
+        console.log(err)
+    }
+}
+
 async function adminAuthorization(req, res, next) {
     try {
         let userData = await models.User.findById(req.auth._id)
@@ -33,4 +50,4 @@ async function adminAuthorization(req, res, next) {
     }
 }
 
-module.exports = { cartAuthorization, adminAuthorization }
+module.exports = { cartAuthorization, transactionAuthorization, adminAuthorization }

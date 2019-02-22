@@ -29,6 +29,24 @@
               <div class="col">Subtotal :</div>
               <div class="col">{{transaction.items.reduce((a,b)=>a+b.amount*b.product.price,0)}}</div>
             </div>
+            <div class="row">
+              <div class="col" v-if="transaction.status=='unpaid' || !transaction.status">
+                Please complete the transaction by paying the requested amount.
+                <button
+                  class="btn btn-primary"
+                  @click="pay(transaction._id)"
+                >I have already paid</button>
+              </div>
+              <div class="col" v-if="transaction.status=='paid'">Your order is being processed</div>
+              <div class="col" v-if="transaction.status=='sent'">
+                The items is being sent
+                <button
+                  class="btn btn-primary"
+                  @click="finish(transaction._id)"
+                >I have received the item</button>
+              </div>
+              <div class="col" v-if="transaction.status=='finished'">Status : Complete</div>
+            </div>
           </div>
         </div>
       </div>
@@ -56,6 +74,32 @@ export default {
           headers: { token }
         });
         this.transactionData = transactionData.data;
+      } catch (err) {
+        this.$emit("display-error", err);
+      }
+    },
+    async pay(transactionId) {
+      try {
+        let transactionData = await axios({
+          method: "POST",
+          baseURL,
+          url: "/api/transactions/pay/" + transactionId,
+          headers: { token }
+        });
+        this.getTransactions();
+      } catch (err) {
+        this.$emit("display-error", err);
+      }
+    },
+    async finish(transactionId) {
+      try {
+        let transactionData = await axios({
+          method: "POST",
+          baseURL,
+          url: "/api/transactions/finish/" + transactionId,
+          headers: { token }
+        });
+        this.getTransactions();
       } catch (err) {
         this.$emit("display-error", err);
       }
