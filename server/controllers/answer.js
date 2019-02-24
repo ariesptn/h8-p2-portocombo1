@@ -115,6 +115,40 @@ class AnswerController {
             res.status(500).json(err)
         }
     }
+
+    static async upvote(req, res) {
+        try {
+            let answerData = await models.Answer.findOne({ _id: req.params.answerId })
+            answerData.downvoters = answerData.downvoters.filter(e => e.toString() != req.auth._id)
+            if (answerData.upvoters.some(e => e.toString() == req.auth._id)) {
+                answerData.upvoters = answerData.upvoters.filter(e => e.toString() != req.auth._id)
+            } else {
+                answerData.upvoters.push(req.auth._id)
+            }
+            answerData.save()
+            res.status(200).json(answerData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+
+    static async downvote(req, res) {
+        try {
+            let answerData = await models.Answer.findOne({ _id: req.params.answerId })
+            answerData.upvoters = answerData.upvoters.filter(e => e.toString() != req.auth._id)
+            if (answerData.downvoters.some(e => e.toString() == req.auth._id)) {
+                answerData.downvoters = answerData.downvoters.filter(e => e.toString() != req.auth._id)
+            } else {
+                answerData.downvoters.push(req.auth._id)
+            }
+            answerData.save()
+            res.status(200).json(answerData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
 }
 
 module.exports = AnswerController

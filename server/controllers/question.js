@@ -98,6 +98,40 @@ class QuestionController {
             res.status(500).json(err)
         }
     }
+
+    static async upvote(req, res) {
+        try {
+            let questionData = await models.Question.findOne({ _id: req.params.questionId })
+            questionData.downvoters = questionData.downvoters.filter(e => e.toString() != req.auth._id)
+            if (questionData.upvoters.some(e => e.toString() == req.auth._id)) {
+                questionData.upvoters = questionData.upvoters.filter(e => e.toString() != req.auth._id)
+            } else {
+                questionData.upvoters.push(req.auth._id)
+            }
+            questionData.save()
+            res.status(200).json(questionData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+
+    static async downvote(req, res) {
+        try {
+            let questionData = await models.Question.findOne({ _id: req.params.questionId })
+            questionData.upvoters = questionData.upvoters.filter(e => e.toString() != req.auth._id)
+            if (questionData.downvoters.some(e => e.toString() == req.auth._id)) {
+                questionData.downvoters = questionData.downvoters.filter(e => e.toString() != req.auth._id)
+            } else {
+                questionData.downvoters.push(req.auth._id)
+            }
+            questionData.save()
+            res.status(200).json(questionData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
 }
 
 module.exports = QuestionController

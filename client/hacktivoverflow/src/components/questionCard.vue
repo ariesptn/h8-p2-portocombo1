@@ -3,9 +3,9 @@
     <div class="row">
       <div class="col-sm-2">
         <div class="d-flex align-items-center justify-content-center flex-column">
-          <button class="btn btn-success">⇧</button>
+          <button class="btn btn-success" @click="upvote()">⇧</button>
           <h1>{{question.vote}}</h1>
-          <button class="btn btn-danger">⇩</button>
+          <button class="btn btn-danger" @click="downvote()">⇩</button>
         </div>
       </div>
       <div class="col-sm-10">
@@ -17,7 +17,7 @@
         <div class="card-body">
           <h5 class="card-title">{{question.title}}</h5>
           <p class="card-text">{{question.description}}</p>
-          <span class="card-text">Tags </span>
+          <span class="card-text">Tags</span>
           <div class="btn-group" role="group" aria-label="Basic example">
             <button
               type="button"
@@ -66,6 +66,32 @@ export default {
           baseURL,
           url: "api/questions/" + this.question._id,
           method: "DELETE",
+          headers: { token }
+        });
+        this.$emit("get-questions", null);
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
+    },
+    async upvote() {
+      try {
+        let questionRequest = await axios({
+          baseURL,
+          url: "api/questions/" + this.question._id + "/upvote",
+          method: "POST",
+          headers: { token }
+        });
+        this.$emit("get-questions", null);
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
+    },
+    async downvote() {
+      try {
+        let questionRequest = await axios({
+          baseURL,
+          url: "api/questions/" + this.question._id + "/downvote",
+          method: "POST",
           headers: { token }
         });
         this.$emit("get-questions", null);
