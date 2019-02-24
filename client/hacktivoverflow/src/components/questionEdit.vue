@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { updateQuestion } from "@/apis/question.js";
 
 export default {
   props: ["question"],

@@ -14,7 +14,7 @@
           <p
             class="card-text"
           >By : {{answer.user.name}} | Created at : {{answer.createdAt}} | Updated at : {{answer.updatedAt}}</p>
-          <div>
+          <div v-if="userName==answer.user.name">
             <button class="btn btn-primary" @click="editFormShown=true">Edit</button>
             <button class="btn btn-primary" @click="deleteAnswer()">Delete</button>
           </div>
@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import { deleteAnswer } from "@/apis/answer.js";
 import AnswerEdit from "./answerEdit.vue";
+import { mapState } from "vuex";
 
 export default {
   props: ["answer"],
@@ -43,6 +43,9 @@ export default {
     return {
       editFormShown: false
     };
+  },
+  computed: {
+    ...mapState(["userName", "userEmail", "isLoggedIn"])
   },
   methods: {
     async deleteAnswer() {

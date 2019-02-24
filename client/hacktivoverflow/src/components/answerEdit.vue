@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import { updateAnswer } from "@/apis/answer.js";
 
 export default {
   props: ["answer"],

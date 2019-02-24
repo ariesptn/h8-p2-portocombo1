@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import { addQuestion } from "@/apis/question.js";
 
 export default {
   data() {

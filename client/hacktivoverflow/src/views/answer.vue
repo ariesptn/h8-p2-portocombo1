@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col">
         <question-card :question="question" @get-questions="getQuestion()"></question-card>
-        <answer-add :question="question" @get-answers="getAnswers()"></answer-add>
+        <answer-add :question="question" @get-answers="getAnswers()" v-if="isLoggedIn"></answer-add>
         <div v-for="(answer,index) in answerData" :key="index">
           <answer-card :answer="answer" @get-answers="getAnswers()"></answer-card>
         </div>
@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import { db } from "@/apis/firebase.js";
 import QuestionCard from "@/components/questionCard.vue";
 import AnswerCard from "@/components/answerCard.vue";
 import AnswerAdd from "@/components/answerAdd.vue";
+import { mapState } from "vuex";
 
 export default {
   created() {
@@ -33,6 +33,9 @@ export default {
       question: { user: {} },
       answerData: []
     };
+  },
+  computed: {
+    ...mapState(["userName", "userEmail", "isLoggedIn"])
   },
   methods: {
     async getQuestion() {

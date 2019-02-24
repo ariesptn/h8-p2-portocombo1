@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { addAnswer } from "@/apis/answer.js";
 
 export default {
   props: ["question"],

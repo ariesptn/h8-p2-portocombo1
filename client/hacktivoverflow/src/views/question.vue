@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <question-add @get-questions="getQuestions()"></question-add>
+        <question-add @get-questions="getQuestions()" v-if="isLoggedIn"></question-add>
         <div v-for="(question,index) in questionData" :key="index">
           <question-card :question="question" @get-questions="getQuestions()"></question-card>
         </div>
@@ -14,7 +14,7 @@
 <script>
 import QuestionAdd from "@/components/questionAdd.vue";
 import QuestionCard from "@/components/questionCard.vue";
-import { db } from "@/apis/firebase.js";
+import { mapState } from "vuex";
 
 export default {
   created() {
@@ -28,6 +28,9 @@ export default {
     return {
       questionData: []
     };
+  },
+  computed: {
+    ...mapState(["userName", "userEmail", "isLoggedIn"])
   },
   methods: {
     async getQuestions() {

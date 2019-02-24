@@ -29,7 +29,7 @@
           <p
             class="card-text"
           >By : {{question.user.name}} | Created at : {{question.createdAt}} | Updated at : {{question.updatedAt}}</p>
-          <div>
+          <div v-if="userName==question.user.name">
             <button class="btn btn-primary" @click="editFormShown=true">Edit</button>
             <button class="btn btn-primary" @click="deleteQuestion()">Delete</button>
           </div>
@@ -46,8 +46,8 @@
 </template>
 
 <script>
-import { deleteQuestion } from "@/apis/question.js";
 import QuestionEdit from "./questionEdit.vue";
+import { mapState } from "vuex";
 
 export default {
   props: ["question"],
@@ -58,6 +58,9 @@ export default {
     return {
       editFormShown: false
     };
+  },
+  computed: {
+    ...mapState(["userName", "userEmail", "isLoggedIn"])
   },
   methods: {
     async deleteQuestion() {
