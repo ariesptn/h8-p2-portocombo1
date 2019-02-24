@@ -4,18 +4,20 @@
       <div class="col-sm-2">
         <div class="d-flex align-items-center justify-content-center flex-column">
           <button class="btn btn-success">⇧</button>
-          <h1>0</h1>
+          <h1>{{question.vote}}</h1>
           <button class="btn btn-danger">⇩</button>
         </div>
       </div>
       <div class="col-sm-10">
         <div class="card-header">
-          <router-link :to="{name:'answers',params:{questionId:question._id}}">{{question.title}}</router-link>
+          <router-link :to="{name:'answers',params:{questionId:question._id}}">
+            <strong>{{question.title}}</strong>
+          </router-link>
         </div>
         <div class="card-body">
-          <h5 class="card-title"></h5>
+          <h5 class="card-title">{{question.title}}</h5>
           <p class="card-text">{{question.description}}</p>
-          <span class="card-text">Tags :</span>
+          <span class="card-text">Tags </span>
           <div class="btn-group" role="group" aria-label="Basic example">
             <button
               type="button"
@@ -24,6 +26,9 @@
               :key="index"
             >{{tag}}</button>
           </div>
+          <p
+            class="card-text"
+          >By : {{question.user.name}} | Created at : {{question.createdAt}} | Updated at : {{question.updatedAt}}</p>
           <div>
             <button class="btn btn-primary" @click="editFormShown=true">Edit</button>
             <button class="btn btn-primary" @click="deleteQuestion()">Delete</button>

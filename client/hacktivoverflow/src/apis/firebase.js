@@ -1,12 +1,13 @@
-firebase.initializeApp({
-    apiKey: "AIzaSyDSHyjU6Wvh3wJwnapSFMxKZ0rBA42G3ek",
-    authDomain: "minioverflow-3310e.firebaseapp.com",
-    databaseURL: "https://minioverflow-3310e.firebaseio.com",
-    projectId: "minioverflow-3310e",
-    storageBucket: "minioverflow-3310e.appspot.com",
-    messagingSenderId: "479044785696"
+/*firebase.initializeApp({
+    apiKey: "",
+    authDomain: "",
+    databaseURL: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: ""
 });
-var db = firebase.firestore();
+let db = firebase.firestore();*/
+let db = null
 
 function updateType(id, direction) {
     var sfDocRef = db.collection("kanban").doc(id);

@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      question: {},
+      question: { user: {} },
       answerData: []
     };
   },
@@ -43,6 +43,9 @@ export default {
           method: "GET",
           headers: { token }
         });
+        if (!questionRequest.data) {
+          this.$router.push("/questions");
+        }
         this.question = questionRequest.data;
       } catch (err) {
         this.$store.commit("displayError", err);
