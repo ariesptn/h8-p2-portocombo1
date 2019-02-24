@@ -29,7 +29,7 @@
           <p
             class="card-text"
           >By : {{question.user.name}} | Created at : {{question.createdAt}} | Updated at : {{question.updatedAt}}</p>
-          <div v-if="userName==question.user.name">
+          <div v-if="userId==question.user._id">
             <button class="btn btn-primary" @click="editFormShown=true">Edit</button>
             <button class="btn btn-primary" @click="deleteQuestion()">Delete</button>
           </div>
@@ -60,7 +60,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["userName", "userEmail", "isLoggedIn"])
+    ...mapState(["userId", "userName", "userEmail", "isLoggedIn"])
   },
   methods: {
     async deleteQuestion() {

@@ -33,7 +33,7 @@ export default {
     this.$store.dispatch("loginCheck");
   },
   computed: {
-    ...mapState(["userName", "userEmail", "isLoggedIn"])
+    ...mapState(["userId", "userName", "userEmail", "isLoggedIn"])
   },
   methods: {
     signOut() {

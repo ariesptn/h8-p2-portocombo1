@@ -30,7 +30,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["userName", "userEmail", "isLoggedIn"])
+    ...mapState(["userId", "userName", "userEmail", "isLoggedIn"])
   },
   methods: {
     async getQuestions() {

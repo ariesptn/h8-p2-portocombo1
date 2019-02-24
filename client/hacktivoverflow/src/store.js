@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    userId: '',
     userName: '',
     userEmail: '',
     isLoggedIn: false,
@@ -24,10 +25,12 @@ export default new Vuex.Store({
     },
     loginCheck(state) {
       if (loginDetails.status) {
+        state.userId = loginDetails.response._id
         state.userName = loginDetails.response.name;
         state.userEmail = loginDetails.response.email;
         state.isLoggedIn = true;
       } else {
+        state.userId = ''
         state.userName = "";
         state.userEmail = "";
         state.isLoggedIn = false;

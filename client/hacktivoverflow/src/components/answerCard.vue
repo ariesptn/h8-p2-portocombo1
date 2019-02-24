@@ -14,7 +14,7 @@
           <p
             class="card-text"
           >By : {{answer.user.name}} | Created at : {{answer.createdAt}} | Updated at : {{answer.updatedAt}}</p>
-          <div v-if="userName==answer.user.name">
+          <div v-if="userId==answer.user._id">
             <button class="btn btn-primary" @click="editFormShown=true">Edit</button>
             <button class="btn btn-primary" @click="deleteAnswer()">Delete</button>
           </div>
@@ -45,7 +45,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["userName", "userEmail", "isLoggedIn"])
+    ...mapState(["userId", "userName", "userEmail", "isLoggedIn"])
   },
   methods: {
     async deleteAnswer() {
