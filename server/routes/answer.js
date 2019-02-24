@@ -2,10 +2,11 @@ const express = require('express')
 const router = express.Router()
 const { authentication, } = require('../middlewares/auth')
 const AnswerController = require('../controllers/answer')
-const { answerAuthorization, } = require('../middlewares/questionAnswerAuth')
+const { questionAuthorization, answerAuthorization, } = require('../middlewares/questionAnswerAuth')
 
 router.get('/all', AnswerController.findAll)
 router.get('/:answerId', AnswerController.findOne)
+router.get('/byQuestionId/:questionId', AnswerController.findByQuestionId)
 
 router.use(authentication)
 router.get('/', AnswerController.find)

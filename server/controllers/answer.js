@@ -31,6 +31,25 @@ class AnswerController {
         }
     }
 
+    static async findByQuestionId(req, res) {
+        try {
+            let answerData = await models.Answer.find({ question: req.params.questionId })
+                .sort({ createdAt: -1 }).populate('user').limit(100).lean()
+            answerData = answerData.map(e => {
+                e.user.email = ''
+                e.user.password = ''
+                e.vote = e.upvoters.length - e.downvoters.length
+                e.upvoters = null
+                e.downvoters = null
+                return e
+            })
+            res.status(200).json(answerData)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json(err)
+        }
+    }
+
     static async findOne(req, res) {
         try {
             let answerData = await models.Answer.findOne({ _id: req.params.answerId })

@@ -12,7 +12,8 @@
               class="form-control"
               id="descriptionInput"
               rows="3"
-              v-model="descriptionInput" required
+              v-model="descriptionInput"
+              required
             ></textarea>
           </div>
           <button type="button" class="btn btn-primary" @click="addAnswer()">Answer</button>
@@ -33,15 +34,23 @@ export default {
     };
   },
   methods: {
-    addAnswer() {
-      addAnswer({
-        questionId: this.question.id,
-        description: this.descriptionInput,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        upvoter: [],
-        downvoter: []
-      });
+    async addAnswer() {
+      try {
+        let data = {
+          description: this.descriptionInput,
+          questionId: this.question._id
+        };
+        let questionData = await axios({
+          baseURL,
+          url: "/api/answers",
+          method: "POST",
+          headers: { token },
+          data
+        });
+        this.$emit("get-answers", null);
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
     }
   }
 };

@@ -23,7 +23,7 @@ router.use('/api/users', userRoutes)
 router.get('/api/googleloginverify', GoogleController.loginVerify)
 
 router.get('/*', (req, res) => {
-    res.status(404).json({ msg: 'page not found' })
+    res.status(404).json({ messsage: 'page not found' })
 })
 
 module.exports = router

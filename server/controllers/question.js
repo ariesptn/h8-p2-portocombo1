@@ -90,6 +90,7 @@ class QuestionController {
 
     static async delete(req, res) {
         try {
+            let answerData = await models.Answer.deleteMany({ question: req.params.questionId })
             let questionData = await models.Question.findOneAndDelete({ _id: req.params.questionId })
             res.status(200).json(questionData)
         } catch (err) {

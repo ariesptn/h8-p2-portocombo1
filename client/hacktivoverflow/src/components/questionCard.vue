@@ -10,7 +10,7 @@
       </div>
       <div class="col-sm-10">
         <div class="card-header">
-          <router-link :to="{name:'answers',params:{answerId:question.id}}">{{question.title}}</router-link>
+          <router-link :to="{name:'answers',params:{questionId:question._id}}">{{question.title}}</router-link>
         </div>
         <div class="card-body">
           <h5 class="card-title"></h5>
@@ -31,6 +31,7 @@
           <question-edit
             :question="question"
             @edit-form-shown="editFormShown=$event"
+            @get-questions="$emit('get-questions',null)"
             v-if="editFormShown"
           ></question-edit>
         </div>
@@ -54,8 +55,18 @@ export default {
     };
   },
   methods: {
-    deleteQuestion() {
-      deleteQuestion(this.question.id);
+    async deleteQuestion() {
+      try {
+        let questionRequest = await axios({
+          baseURL,
+          url: "api/questions/" + this.question._id,
+          method: "DELETE",
+          headers: { token }
+        });
+        this.$emit("get-questions", null);
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
     }
   }
 };

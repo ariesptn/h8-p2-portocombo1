@@ -2,9 +2,9 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <question-add></question-add>
+        <question-add @get-questions="getQuestions()"></question-add>
         <div v-for="(question,index) in questionData" :key="index">
-          <question-card :question="question"></question-card>
+          <question-card :question="question" @get-questions="getQuestions()"></question-card>
         </div>
       </div>
     </div>
@@ -18,17 +18,7 @@ import { db } from "@/apis/firebase.js";
 
 export default {
   created() {
-    db.collection("questions")
-      .orderBy("createdAt", "desc")
-      .limit(100)
-      .onSnapshot(querySnapshot => {
-        let questionData = [];
-        querySnapshot.forEach(doc => {
-          questionData.push({ id: doc.id, ...doc.data() });
-        });
-        this.questionData = questionData;
-        console.log(this.questionData);
-      });
+    this.getQuestions();
   },
   components: {
     QuestionAdd,
@@ -38,6 +28,21 @@ export default {
     return {
       questionData: []
     };
+  },
+  methods: {
+    async getQuestions() {
+      try {
+        let questionRequest = await axios({
+          baseURL,
+          url: "api/questions/all",
+          method: "GET",
+          headers: { token }
+        });
+        this.questionData = questionRequest.data;
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
+    }
   }
 };
 </script>

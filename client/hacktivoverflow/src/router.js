@@ -22,14 +22,14 @@ export default new Router({
       component: Question
     },
     {
-      path: '/answers/:answerId',
+      path: '/answers/:questionId',
       name: 'answers',
       component: Answer
     },
     {
       path: '/loginregister',
       name: 'loginregister',
-      componnet: LoginRegister
+      component: LoginRegister
     },
     {
       path: '/about',

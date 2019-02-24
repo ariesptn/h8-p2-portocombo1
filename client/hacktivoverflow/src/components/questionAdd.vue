@@ -16,7 +16,8 @@
               class="form-control"
               id="descriptionInput"
               rows="3"
-              v-model="descriptionInput" required
+              v-model="descriptionInput"
+              required
             ></textarea>
           </div>
           <div class="form-group">
@@ -42,16 +43,24 @@ export default {
     };
   },
   methods: {
-    addQuestion() {
-      addQuestion({
-        title: this.titleInput,
-        description: this.descriptionInput,
-        tags: this.tagsInput.split(",").map(e => e.trim()),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        upvoter: [],
-        downvoter: []
-      });
+    async addQuestion() {
+      try {
+        let data = {
+          title: this.titleInput,
+          description: this.descriptionInput,
+          tags: this.tagsInput
+        };
+        let questionData = await axios({
+          baseURL,
+          url: "/api/questions",
+          method: "POST",
+          headers: { token },
+          data
+        });
+        this.$emit("get-questions", null);
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
     }
   }
 };

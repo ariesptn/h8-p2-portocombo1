@@ -19,6 +19,7 @@
           <answer-edit
             :answer="answer"
             @edit-form-shown="editFormShown=$event"
+            @get-answers="$emit('get-answers', null)"
             v-if="editFormShown"
           ></answer-edit>
         </div>
@@ -42,8 +43,18 @@ export default {
     };
   },
   methods: {
-    deleteAnswer() {
-      deleteAnswer(this.answer.id);
+    async deleteAnswer() {
+      try {
+        let questionRequest = await axios({
+          baseURL,
+          url: "api/answers/" + this.answer._id,
+          method: "DELETE",
+          headers: { token }
+        });
+        this.$emit("get-answers", null);
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
     }
   }
 };

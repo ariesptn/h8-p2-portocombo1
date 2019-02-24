@@ -2,10 +2,10 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <question-card :question="question"></question-card>
-        <answer-add :question="question"></answer-add>
+        <question-card :question="question" @get-questions="getQuestion()"></question-card>
+        <answer-add :question="question" @get-answers="getAnswers()"></answer-add>
         <div v-for="(answer,index) in answerData" :key="index">
-          <answer-card :answer="answer"></answer-card>
+          <answer-card :answer="answer" @get-answers="getAnswers()"></answer-card>
         </div>
       </div>
     </div>
@@ -20,25 +20,8 @@ import AnswerAdd from "@/components/answerAdd.vue";
 
 export default {
   created() {
-    db.collection("questions")
-      .doc(this.$route.params.answerId)
-      .onSnapshot(doc => {
-        let question = { id: doc.id, ...doc.data() };
-        this.question = question;
-        console.log(this.question);
-      });
-    db.collection("answers")
-      .where("questionId", "==", this.$route.params.answerId)
-      .orderBy("createdAt", "desc")
-      .limit(100)
-      .onSnapshot(querySnapshot => {
-        let answerData = [];
-        querySnapshot.forEach(doc => {
-          answerData.push({ id: doc.id, ...doc.data() });
-        });
-        this.answerData = answerData;
-        console.log(this.answerData);
-      });
+    this.getQuestion();
+    this.getAnswers();
   },
   components: {
     QuestionCard,
@@ -50,6 +33,34 @@ export default {
       question: {},
       answerData: []
     };
+  },
+  methods: {
+    async getQuestion() {
+      try {
+        let questionRequest = await axios({
+          baseURL,
+          url: "api/questions/" + this.$route.params.questionId,
+          method: "GET",
+          headers: { token }
+        });
+        this.question = questionRequest.data;
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
+    },
+    async getAnswers() {
+      try {
+        let questionRequest = await axios({
+          baseURL,
+          url: "api/answers/byQuestionId/" + this.$route.params.questionId,
+          method: "GET",
+          headers: { token }
+        });
+        this.answerData = questionRequest.data;
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
+    }
   }
 };
 </script>

@@ -6,7 +6,13 @@
     </div>
     <div class="form-group">
       <label for="descriptionInput">Question</label>
-      <textarea class="form-control" id="descriptionInput" rows="3" v-model="descriptionInput" required></textarea>
+      <textarea
+        class="form-control"
+        id="descriptionInput"
+        rows="3"
+        v-model="descriptionInput"
+        required
+      ></textarea>
     </div>
     <div class="form-group">
       <label for="tagsInput">Comma separated tags</label>
@@ -31,14 +37,25 @@ export default {
     };
   },
   methods: {
-    updateQuestion() {
-      updateQuestion(this.question.id, {
-        title: this.titleInput,
-        description: this.descriptionInput,
-        tags: this.tagsInput.split(",").map(e => e.trim()),
-        updatedAt: new Date()
-      });
-      this.$emit("edit-form-shown", false);
+    async updateQuestion() {
+      try {
+        let data = {
+          title: this.titleInput,
+          description: this.descriptionInput,
+          tags: this.tagsInput
+        };
+        let questionData = await axios({
+          baseURL,
+          url: "/api/questions/" + this.question._id,
+          method: "PUT",
+          headers: { token },
+          data
+        });
+        this.$emit("get-questions", null);
+        this.$emit("edit-form-shown", false);
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
     }
   }
 };

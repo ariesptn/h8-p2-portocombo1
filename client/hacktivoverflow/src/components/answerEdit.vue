@@ -22,12 +22,23 @@ export default {
     };
   },
   methods: {
-    updateAnswer() {
-      updateAnswer(this.answer.id, {
-        description: this.descriptionInput,
-        updatedAt: new Date()
-      });
-      this.$emit('edit-form-shown',false)
+    async updateAnswer() {
+      try {
+        let data = {
+          description: this.descriptionInput,
+        };
+        let questionData = await axios({
+          baseURL,
+          url: "/api/answers/" + this.answer._id,
+          method: "PUT",
+          headers: { token },
+          data
+        });
+        this.$emit("get-answers", null);
+        this.$emit("edit-form-shown", false);
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
     }
   }
 };
