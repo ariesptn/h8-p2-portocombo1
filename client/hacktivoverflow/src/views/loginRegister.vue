@@ -39,6 +39,18 @@ export default {
       registerPassword: ""
     };
   },
+  computed: {
+    isLoggedIn() {
+      return this.$store.state.isLoggedIn;
+    }
+  },
+  watch: {
+    isLoggedIn(value) {
+      if (value == true) {
+        this.$router.push("/");
+      }
+    }
+  },
   methods: {
     login: function() {
       login({
