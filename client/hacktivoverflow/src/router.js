@@ -19,7 +19,17 @@ export default new Router({
     {
       path: '/questions',
       name: 'questions',
-      component: Question
+      component: Question,
+    },
+    {
+      path: '/search/:searchQuery',
+      name: 'findBysearchQuery',
+      component: Question,
+    },
+    {
+      path: '/tag/:tag',
+      name: 'findByTag',
+      component: Question,
     },
     {
       path: '/answers/:questionId',

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from './router'
 
 Vue.use(Vuex)
 
@@ -9,6 +10,7 @@ export default new Vuex.Store({
     userName: '',
     userEmail: '',
     isLoggedIn: false,
+    watchedTags: [],
   },
   mutations: {
     displayError: function (state, error) {
@@ -36,6 +38,15 @@ export default new Vuex.Store({
         state.isLoggedIn = false;
       }
     },
+    getWatchedTags(state, payload) {
+      state.watchedTags = payload.tags || []
+    },
+    searchTag(state, tag) {
+      router.push('/tag/' + tag)
+    },
+    searchByQuery(state, searchQuery) {
+      router.push('/search/' + searchQuery)
+    },
   },
   actions: {
     loginCheck({ commit, state }, payload) {
@@ -46,5 +57,18 @@ export default new Vuex.Store({
         }
       };
     },
+    async getWatchedTags({ commit, state }, payload) {
+      try {
+        let qaTagRequest = await axios({
+          baseURL,
+          url: "api/qatags",
+          method: "GET",
+          headers: { token }
+        });
+        commit('getWatchedTags', qaTagRequest.data || {})
+      } catch (err) {
+        commit("displayError", err);
+      }
+    }
   }
 })

@@ -29,7 +29,21 @@ export default {
       questionData: []
     };
   },
+  watch: {
+    searchQuery(val) {
+      this.getQuestions();
+    },
+    searchTag(val) {
+      this.getQuestions();
+    }
+  },
   computed: {
+    searchQuery() {
+      return this.$route.params.searchQuery;
+    },
+    searchTag() {
+      return this.$route.params.tag;
+    },
     ...mapState(["userId", "userName", "userEmail", "isLoggedIn"])
   },
   methods: {
@@ -41,7 +55,23 @@ export default {
           method: "GET",
           headers: { token }
         });
-        this.questionData = questionRequest.data;
+        if (this.searchQuery) {
+          let searchQuery = this.searchQuery;
+          this.questionData = questionRequest.data.filter(e => {
+            return (
+              e.title.includes(searchQuery) ||
+              e.description.includes(searchQuery) ||
+              e.tags.some(tag => tag.includes(searchQuery))
+            );
+          });
+        } else if (this.searchTag) {
+          let tag = this.searchTag;
+          this.questionData = questionRequest.data.filter(e =>
+            e.tags.includes(tag)
+          );
+        } else {
+          this.questionData = questionRequest.data;
+        }
       } catch (err) {
         this.$store.commit("displayError", err);
       }

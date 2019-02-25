@@ -17,14 +17,14 @@
         <div class="card-body">
           <h5 class="card-title">{{question.title}}</h5>
           <p class="card-text">{{question.description}}</p>
-          <span class="card-text">Tags</span>
-          <div class="btn-group" role="group" aria-label="Basic example">
+          <span class="card-text">Tags :</span>
+          <div class="btn-group" role="group" v-for="(tag,index) in question.tags" :key="index">
             <button
               type="button"
               class="btn btn-secondary"
-              v-for="(tag,index) in question.tags"
-              :key="index"
+              @click="$store.commit('searchTag',tag)"
             >{{tag}}</button>
+            <button class="btn btn-success" @click="addWatchedTag(tag)">+</button>
           </div>
           <p
             class="card-text"
@@ -98,6 +98,19 @@ export default {
           headers: { token }
         });
         this.$emit("get-questions", null);
+      } catch (err) {
+        this.$store.commit("displayError", err);
+      }
+    },
+    async addWatchedTag(tag) {
+      try {
+        let qaTagRequest = await axios({
+          baseURL,
+          url: "api/qatags/" + tag,
+          method: "POST",
+          headers: { token }
+        });
+        this.$store.dispatch("getWatchedTags");
       } catch (err) {
         this.$store.commit("displayError", err);
       }

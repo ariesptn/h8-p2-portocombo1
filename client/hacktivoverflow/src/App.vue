@@ -3,7 +3,9 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <h1>Mini Overflow</h1>
+          <router-link to="/">
+            <h1>Mini Overflow</h1>
+          </router-link>
         </div>
         <div class="col">
           <div v-if="isLoggedIn">
@@ -17,6 +19,10 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <search-input></search-input>
+        <watched-tags v-if="isLoggedIn"></watched-tags>
+      </div>
     </div>
     <router-view/>
     <div class="container">
@@ -27,10 +33,20 @@
 
 <script>
 import { mapState } from "vuex";
+import WatchedTags from "@/components/watchedTags.vue";
+import SearchInput from "@/components/searchInput.vue";
 
 export default {
+  data() {
+    return {};
+  },
+  components: {
+    WatchedTags,
+    SearchInput
+  },
   created() {
     this.$store.dispatch("loginCheck");
+    this.$store.dispatch("getWatchedTags");
   },
   computed: {
     ...mapState(["userId", "userName", "userEmail", "isLoggedIn"])
@@ -42,7 +58,3 @@ export default {
   }
 };
 </script>
-
-
-<style>
-</style>
