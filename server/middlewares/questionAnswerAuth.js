@@ -34,4 +34,4 @@ async function answerAuthorization(req, res, next) {
     }
 }
 
-module.exports = { questionAuthorization, answerAuthorization }
+module.exports = { questionAuthorization, answerAuthorization, }
