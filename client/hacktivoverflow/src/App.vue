@@ -20,8 +20,12 @@
         </div>
       </div>
       <div class="row">
-        <search-input></search-input>
-        <watched-tags v-if="isLoggedIn"></watched-tags>
+        <div class="col-9">
+          <watched-tags v-if="isLoggedIn"></watched-tags>
+        </div>
+        <div class="col-3">
+          <search-input></search-input>
+        </div>
       </div>
     </div>
     <router-view/>

@@ -1,9 +1,14 @@
 <template>
   <div>
-    <form @submit.prevent="search()">
-      Search :
-      <input type="text" v-model="searchInput">
-      <input type="submit" value="Search">
+    <form class="form-row" @submit.prevent="search()">
+      <input
+        type="text"
+        class="form-control col-10"
+        placeholder="Search"
+        id="searchInput"
+        v-model="searchInput"
+      >
+      <input type="submit" class="btn btn-primary form-control col-2" value="🔍">
     </form>
   </div>
 </template>

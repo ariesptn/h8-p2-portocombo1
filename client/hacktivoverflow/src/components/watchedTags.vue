@@ -1,5 +1,6 @@
 <template>
-  <div>Watched Tags :
+  <div>
+    <span>Watched tags :</span>
     <div class="btn-group" role="group" v-for="(tag,index) in watchedTags" :key="index">
       <button class="btn btn-secondary" @click="$store.commit('searchTag',tag)">{{tag}}</button>
       <button class="btn btn-danger" @click="removeWatchedTag(tag)">-</button>

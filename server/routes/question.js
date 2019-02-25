@@ -13,7 +13,7 @@ router.post('/', QuestionController.create)
 router.put('/:questionId', questionAuthorization, QuestionController.update)
 router.delete('/:questionId', questionAuthorization, QuestionController.delete)
 
-router.post('/:questionId/upvote', questionAuthorization, QuestionController.upvote)
-router.post('/:questionId/downvote', questionAuthorization, QuestionController.downvote)
+router.post('/:questionId/upvote', QuestionController.upvote)
+router.post('/:questionId/downvote', QuestionController.downvote)
 
 module.exports = router
