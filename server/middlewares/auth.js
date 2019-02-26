@@ -18,7 +18,7 @@ async function authentication(req, res, next) {
                 req.auth = decoded
                 userTokens[req.headers.token] = req.auth
                 userTokens[req.headers.token].accessedAt = new Date().getTime()
-                tokenTimeout(req.headers.token)
+                //tokenTimeout(req.headers.token)
                 return next()
             } else {
                 throw { message: 'unauthorized user' }
