@@ -15,7 +15,7 @@ async function authentication(req, res, next) {
         if (decoded) {
             let userData = await models.User.findOne({ email: decoded.email }).lean()
             if (userData) {
-                req.auth = userData
+                req.auth = decoded
                 userTokens[req.headers.token] = req.auth
                 userTokens[req.headers.token].accessedAt = new Date().getTime()
                 tokenTimeout(req.headers.token)
@@ -57,6 +57,6 @@ function tokenTimeout(token) {
     })
 }
 
-kue.app.listen(3001)
+//kue.app.listen(3001)
 
 module.exports = { authentication, }

@@ -13,6 +13,9 @@
 import { mapState } from "vuex";
 
 export default {
+  created() {
+    this.$store.dispatch("getWatchedTags");
+  },
   computed: {
     ...mapState(["watchedTags"])
   },
