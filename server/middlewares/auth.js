@@ -44,6 +44,7 @@ cron.schedule('19 * * * *', function () {
     cleanCache()
 })
 
+/*
 const kue = require('kue')
 
 function tokenTimeout(token) {
@@ -56,7 +57,7 @@ function tokenTimeout(token) {
         }, 60 * 60 * 1000)
     })
 }
-
+*/
 //kue.app.listen(3001)
 
 module.exports = { authentication, }
