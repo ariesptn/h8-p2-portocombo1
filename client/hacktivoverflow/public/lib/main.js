@@ -1,5 +1,5 @@
 let token = localStorage.getItem('token')
-let baseURL = 'http://localhost:3000'
+let baseURL = ''
 
 let loginDetails = {
     _status: false,

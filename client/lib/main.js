@@ -1,5 +1,5 @@
 let token = localStorage.getItem('token')
-let baseUrl = 'http://localhost:3000'
+let baseUrl = ''
 let spinner = `
     <div class="spinner-border" role="status">
     <span class="sr-only">Loading...</span>

@@ -31,6 +31,7 @@ const sendUploadToGCS = (req, res, next) => {
 
   stream.on('error', (err) => {
     req.file.cloudStorageError = err
+    console.log(JSON.stringify(err,null,2))
     next(err)
   })
 
